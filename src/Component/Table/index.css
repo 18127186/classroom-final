@@ -1,0 +1,16 @@
+.edit-btn {
+    background-color: white;
+    color: black;
+    margin-right: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.remove-btn {
+    background-color: gray;
+    color: white;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.action {
+    padding: 0;
+}
