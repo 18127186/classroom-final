@@ -3,11 +3,11 @@ import {Link} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css"
 import Table from "../Table";
-import { Dropdown } from 'react-bootstrap';
 const AdminPage = () => {
     const [data, setData] = useState([]);
     const [loadFirst, setLoadFirst] = useState(true);
     const [loadCheckUser, setLoadCheckUser] = useState(false);
+    const [changeData, setChangeData] = useState(false); // for table
     const getInfo = () => {
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -67,7 +67,9 @@ const AdminPage = () => {
             setLoadCheckUser(false);
         }
     }
-    
+    const uploadData = () => {
+        getInfo();
+    }
     checkUsernameExist();
     return (
         <div className="row admin-page">
@@ -87,10 +89,9 @@ const AdminPage = () => {
                 </div>
             </div>
             <div className="offset-1 col-6">
-                    <div className="row">
-                        <Table columns={columns} data={data} /> 
-                    </div>
+                <Table columns={columns} data={data} uploadData={uploadData} /> 
             </div>
+            
         </div>
     );
 }

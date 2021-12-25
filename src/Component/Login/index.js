@@ -18,7 +18,7 @@ const Login = ({onLoginSuccess}) => {
         width: 300,
         margin: "20px auto"
     }
-    const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
+    const [isAdmin, setIsAdmin] = useState(false);
     const avatarStyle = {
         backgroundColor: '#1bbd7e'
     }

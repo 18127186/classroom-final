@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useEffect,useState} from "react";
 import { useTable, useGlobalFilter, useAsyncDebounce  } from "react-table";
 import "./index.css"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {  Modal, Form } from "react-bootstrap"
 function GlobalFilter({
     preGlobalFilteredRows,
     globalFilter,
@@ -23,8 +25,49 @@ function GlobalFilter({
         />
       </span>
     )
+}
+function Table({ columns, data, uploadData }) {
+  const [studentID, setStudentID] = useState("");
+  const [accountID, setAccountID] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  const onHandleShow = (id) => {
+    setAccountID(id);
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    fetch(process.env.REACT_APP_API_URL + "accounts/" + id , requestOptions)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw Error(response.status);
+    })
+    .then(result => {
+      setStudentID(result.account[0].studentID);
+	    setName(result.account[0].name);
+      setAddress(result.account[0].address);
+      setPhone(result.account[0].phone);
+      console.log(result);
+      setShowDialog(true);
+    })
+    .catch(error => {
+      console.log('error', error)
+    });
   }
-function Table({ columns, data }) {
+  const onHandleClose = () => {
+      setShowDialog(false);
+  }
+  const studentIDOnChangeHandler = (e) => setStudentID(e.target.value);
+	const nameOnChangeHandler = (e) => setName(e.target.value);
+  const addressOnChangeHandler = (e) => setAddress(e.target.value);
+  const phoneOnChangeHandler = (e) => setPhone(e.target.value);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow,state,
     preGlobalFilteredRows, 
     setGlobalFilter, } =
@@ -33,45 +76,140 @@ function Table({ columns, data }) {
       data,
     },
     useGlobalFilter 
-    );
+  );
+  const onClickRemove = (id) => {
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    fetch(process.env.REACT_APP_API_URL + "accounts/remove/" + id , requestOptions)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw Error(response.status);
+    })
+    .then(result => {
+      uploadData();
+    })
+    .catch(error => {
+      console.log('error', error)
+    });
+  }
+  const saveBtnOnClick = (e) => {
+    e.preventDefault();
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+    myHeaders.append("Content-Type", "application/json");
 
+    var raw = JSON.stringify({
+        "studentID": studentID,
+        "name": name,
+        "address": address,
+        "phone": phone
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch(process.env.REACT_APP_API_URL + "accounts/update/"+ accountID, requestOptions)
+    .then(response =>  {
+        console.log(response);
+        return response.text();
+    })
+    .then(result => {
+        uploadData();
+        onHandleClose();
+        alert("Updated!");
+    })
+    .catch(error => {
+        console.log('error', error)
+        alert("An error occur");
+    });
+  }
   return (
-    <div>
+    <div className="row">
         <GlobalFilter
         preGlobalFilteredRows={preGlobalFilteredRows}
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
         />
-        <table {...getTableProps()} border="1">
-        <thead>
-            {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-                ))}
-                <th >Action</th>
-            </tr>
-            ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-                <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                })}
-                <td className="action">
-                    {<button className="edit-btn">Edit</button>}
-                    {<button className="remove-btn">Remove</button>}
-                </td>
-                </tr>
-                
-            );
-            })}
-        </tbody>
+        <table {...getTableProps()} border="1" className="table-data">
+          <thead>
+              {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                  ))}
+                  <th >Action</th>
+              </tr>
+              ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+              {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                  
+                  <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    if (row.values.username !== "root")
+                      return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                  })}
+                  { row.values.username !== "root" ? 
+                  <td className="action">
+                      <button onClick={() => onHandleShow(row.values.id)} className="edit-btn">Edit</button>
+                      <button onClick={() => onClickRemove(row.values.id)} className="remove-btn">Remove</button>
+                  </td>: ""}
+                  
+                  </tr>
+                  
+              );
+              })}
+          </tbody>
         </table>
+        <div>
+          <Modal show={showDialog} onHide={onHandleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Profile</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Student ID </Form.Label>
+                        <Form.Control type="text" value={studentID}  onChange={studentIDOnChangeHandler} />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Fullname </Form.Label>
+                        <Form.Control type="text" value={name}  onChange={nameOnChangeHandler}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Address </Form.Label>
+                        <Form.Control type="text" value={address}  onChange={addressOnChangeHandler}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Numberphone </Form.Label>
+                        <Form.Control type="text" value={phone}  onChange={phoneOnChangeHandler}/>
+                    </Form.Group>
+                    <div className="text-center" >
+                        <button className="btn btn-dark btnEdit"  onClick={saveBtnOnClick}> SAVE </button>
+                    </div>
+                </Form>
+            </Modal.Body>
+                        
+          </Modal>
+                </div>
     </div>
+
   );
 }
 
