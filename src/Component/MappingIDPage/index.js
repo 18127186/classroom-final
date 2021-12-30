@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Link} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css"
-import Table from "../Table";
-const AdminPage = () => {
+import TableMappingID from "../TableMappingID";
+const MappingIDPage = () => {
     const [data, setData] = useState([]);
     const [loadFirst, setLoadFirst] = useState(true);
     const [loadCheckUser, setLoadCheckUser] = useState(false);
@@ -43,12 +43,12 @@ const AdminPage = () => {
             accessor: "id",
           },
           {
-            Header: "Name",
-            accessor: "name",
-          },
-          {
             Header: "Username",
             accessor: "username",
+          },
+          {
+            Header: "StudentID",
+            accessor: "studentID",
           }
         ],
         []
@@ -78,21 +78,21 @@ const AdminPage = () => {
             
             <div className="col-2 catalog ">
                 <div className="row">
-                <Link to="#" className="text-catalog border-catalog selected-catalog"> Manage Account </Link>
+                <Link to="/admin" className="text-catalog border-catalog"> Manage Account </Link>
                 </div>
                 <div className="row">
-                <Link to="/mapID" className="text-catalog center-catalog"> Manage Class </Link>
+                <Link to="#" className="text-catalog center-catalog "> Manage Class </Link>
                 </div>
                 <div className="row">
-                <Link to="/mapID" className="text-catalog border-catalog "> Mapping Student ID </Link>
+                <Link to="#" className="text-catalog border-catalog selected-catalog"> Mapping Student ID </Link>
                 </div>
             </div>
             <div className="offset-1 col-6">
-                <Table columns={columns} data={data} uploadData={uploadData} /> 
+                <TableMappingID columns={columns} data={data} uploadData={uploadData} /> 
             </div>
             
         </div>
     );
 }
 
-export default AdminPage;
+export default MappingIDPage;

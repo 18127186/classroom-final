@@ -64,7 +64,6 @@ function Table({ columns, data, uploadData }) {
   const onHandleClose = () => {
       setShowDialog(false);
   }
-  const studentIDOnChangeHandler = (e) => setStudentID(e.target.value);
 	const nameOnChangeHandler = (e) => setName(e.target.value);
   const addressOnChangeHandler = (e) => setAddress(e.target.value);
   const phoneOnChangeHandler = (e) => setPhone(e.target.value);
@@ -77,6 +76,28 @@ function Table({ columns, data, uploadData }) {
     },
     useGlobalFilter 
   );
+  const lockAccount = (id) => {
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    fetch(process.env.REACT_APP_API_URL + "accounts/lock/" + id , requestOptions)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw Error(response.status);
+    })
+    .then(result => {
+      uploadData();
+    })
+    .catch(error => {
+      console.log('error', error)
+    });
+  }
   const onClickRemove = (id) => {
     let myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -164,8 +185,12 @@ function Table({ columns, data, uploadData }) {
                   })}
                   { row.values.username !== "root" ? 
                   <td className="action">
-                      <button onClick={() => onHandleShow(row.values.id)} className="edit-btn">Edit</button>
-                      <button onClick={() => onClickRemove(row.values.id)} className="remove-btn">Remove</button>
+                      <button onClick={() => onHandleShow(row.values.id)} className="white-btn">Edit</button>
+                      {console.log(data[i])}
+                      {data[i].ban === 1 ? 
+                      <button onClick={() => lockAccount(row.values.id)} className="black-btn">Unlock</button>:
+                      <button onClick={() => lockAccount(row.values.id)} className="black-btn">Lock</button>}
+                      <button onClick={() => onClickRemove(row.values.id)} className="white-btn">Remove</button>
                   </td>: ""}
                   
                   </tr>
@@ -181,10 +206,6 @@ function Table({ columns, data, uploadData }) {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label> Student ID </Form.Label>
-                        <Form.Control type="text" value={studentID}  onChange={studentIDOnChangeHandler} />
-                    </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label> Fullname </Form.Label>
