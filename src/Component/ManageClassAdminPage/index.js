@@ -2,11 +2,10 @@ import React, {useState} from "react";
 import {Link} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css"
-import Table from "../Table";
-const AdminPage = () => {
+import TableManageClass from "../TableManageClass";
+const ManageClassAdminPage = () => {
     const [data, setData] = useState([]);
     const [loadFirst, setLoadFirst] = useState(true);
-    const [loadCheckUser, setLoadCheckUser] = useState(false);
     const getInfo = () => {
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -15,7 +14,7 @@ const AdminPage = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        fetch(process.env.REACT_APP_API_URL + "accounts/useraccount" , requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "classes/admin" , requestOptions)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -24,10 +23,8 @@ const AdminPage = () => {
                 throw Error(response.status);
             })
             .then(result => {
-                
-                console.log(result);
                 setData(result);
-                setLoadCheckUser(true);
+                console.log(result);
                 
             })
             .catch(error => {
@@ -49,29 +46,19 @@ const AdminPage = () => {
             accessor: "name",
           },
           {
-            Header: "Username",
-            accessor: "username",
+            Header: "Description",
+            accessor: "description",
+          },
+          {
+            Header: "ID Teacher",
+            accessor: "creator",
           }
         ],
         []
     );
-    const checkUsernameExist = () => {
-        if (loadCheckUser) {
-            let newData = [];
-            for (let index = 0; index <data.length; index++) {
-                if (data[index].username === "") {
-                    data[index].username = data[index].email;
-                }
-                newData.push(data[index]);
-            }
-            setData(newData);
-            setLoadCheckUser(false);
-        }
-    }
     const uploadData = () => {
         getInfo();
     }
-    checkUsernameExist();
     return (
         <div className="row admin-page">
             <div className="row mb-4">
@@ -80,21 +67,21 @@ const AdminPage = () => {
             
             <div className="col-2 catalog ">
                 <div className="row">
-                <Link to="#" className="text-catalog border-catalog selected-catalog"> Manage Account </Link>
+                <Link to="/admin" className="text-catalog border-catalog"> Manage Account </Link>
                 </div>
                 <div className="row">
-                <Link to="/manageclass" className="text-catalog center-catalog"> Manage Class </Link>
+                <Link to="#" className="text-catalog center-catalog selected-catalog"> Manage Class </Link>
                 </div>
                 <div className="row">
                 <Link to="/mapID" className="text-catalog border-catalog "> Mapping Student ID </Link>
                 </div>
             </div>
             <div className="offset-1 col-6">
-                <Table columns={columns} data={data} uploadData={uploadData} /> 
+                <TableManageClass columns={columns} data={data} uploadData={uploadData} /> 
             </div>
             
         </div>
     );
 }
 
-export default AdminPage;
+export default ManageClassAdminPage;

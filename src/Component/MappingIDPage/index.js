@@ -15,7 +15,7 @@ const MappingIDPage = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        fetch(process.env.REACT_APP_API_URL + "accounts" , requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/useraccount" , requestOptions)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -24,6 +24,7 @@ const MappingIDPage = () => {
                 throw Error(response.status);
             })
             .then(result => {
+                console.log(result);
                 setData(result);
                 setLoadCheckUser(true);
                 
@@ -81,7 +82,7 @@ const MappingIDPage = () => {
                 <Link to="/admin" className="text-catalog border-catalog"> Manage Account </Link>
                 </div>
                 <div className="row">
-                <Link to="#" className="text-catalog center-catalog "> Manage Class </Link>
+                <Link to="/manageclass" className="text-catalog center-catalog "> Manage Class </Link>
                 </div>
                 <div className="row">
                 <Link to="#" className="text-catalog border-catalog selected-catalog"> Mapping Student ID </Link>

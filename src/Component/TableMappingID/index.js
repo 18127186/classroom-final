@@ -81,9 +81,6 @@ function TableMappingID({ columns, data, uploadData }) {
         alert("An error occur");
     });
   }
-  //duma. deo hiểu huhu
-  // huhu deo hieu. dm cay the. má. t muốn bỏ nghhef vc :v
-  // tui cũng vậy bro :v
   return (
     <div className="row">
         <GlobalFilter
