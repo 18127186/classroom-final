@@ -136,12 +136,17 @@ const Login = ({onLoginSuccess}) => {
                 if (result.message) {
                     alert("Account Banned");
                 }
+                else if (result.type === 'admin') {
+
+                    setIsAdmin(true);
+                    localStorage.setItem("isAdmin", true);
+                    localStorage.setItem("token", result.token);
+                    localStorage.setItem("userId", result.user.id);
+                    setIsLogin(true);
+                    
+                    onLoginSuccess();
+                }
                 else {
-                    console.log(result)
-                    if (result.user.username === "root") {
-                        setIsAdmin(true);
-                        localStorage.setItem("isAdmin", true);
-                    } 
                     localStorage.setItem("token", result.token);
                     localStorage.setItem("userId", result.user.id);
                     setIsLogin(true);

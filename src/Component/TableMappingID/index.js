@@ -57,7 +57,8 @@ function TableMappingID({ columns, data, uploadData }) {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-        "studentID": studentID
+        "studentID": studentID,
+        "accountID": id
     });
     var requestOptions = {
         method: 'POST',
@@ -65,7 +66,7 @@ function TableMappingID({ columns, data, uploadData }) {
         body: raw,
         redirect: 'follow'
     };
-    fetch(process.env.REACT_APP_API_URL + "accounts/mapping/"+ id, requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "accounts/mapping", requestOptions)
     .then(response =>  {
         console.log('ok');
         return response.text();

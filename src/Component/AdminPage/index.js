@@ -15,7 +15,7 @@ const AdminPage = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        fetch(process.env.REACT_APP_API_URL + "accounts/useraccount" , requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/user" , requestOptions)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -81,6 +81,9 @@ const AdminPage = () => {
             <div className="col-2 catalog ">
                 <div className="row">
                 <Link to="#" className="text-catalog border-catalog selected-catalog"> Manage Account </Link>
+                </div>
+                <div className="row">
+                <Link to="/adminaccount" className="text-catalog border-catalog "> Manage Admin </Link>
                 </div>
                 <div className="row">
                 <Link to="/manageclass" className="text-catalog center-catalog"> Manage Class </Link>

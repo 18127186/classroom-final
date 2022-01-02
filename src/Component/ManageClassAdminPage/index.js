@@ -62,12 +62,15 @@ const ManageClassAdminPage = () => {
     return (
         <div className="row admin-page">
             <div className="row mb-4">
-                <h1 className="text-center ">List Account</h1>
+                <h1 className="text-center ">List Class</h1>
             </div>
             
             <div className="col-2 catalog ">
                 <div className="row">
                 <Link to="/admin" className="text-catalog border-catalog"> Manage Account </Link>
+                </div>
+                <div className="row">
+                <Link to="/adminaccount" className="text-catalog border-catalog "> Manage Admin </Link>
                 </div>
                 <div className="row">
                 <Link to="#" className="text-catalog center-catalog selected-catalog"> Manage Class </Link>
