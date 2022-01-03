@@ -42,7 +42,7 @@ function Table({ columns, data, uploadData }) {
         headers: myHeaders,
         redirect: 'follow'
     };
-    fetch(process.env.REACT_APP_API_URL + "accounts/" + id , requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "accounts/detail" + id , requestOptions)
     .then(response => {
       if (response.ok) {
         return response.json();

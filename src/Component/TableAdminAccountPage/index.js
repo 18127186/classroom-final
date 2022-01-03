@@ -26,15 +26,25 @@ function GlobalFilter({
       </span>
     )
 }
-function TableMappingID({ columns, data, uploadData }) {
-  const [studentID, setStudentID] = useState("");
-  const [accountID, setAccountID] = useState("");
+function TableAdminAccountPage({ columns, data, uploadData }) {
+  
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [confirm, setConfirm] = useState();
   const [showDialog, setShowDialog] = useState(false);
-  const onHandleShow = (id) => {
-    setAccountID(id);
+  const handleOnchangeUsername = (e) => {
+    setUsername(e.target.value);
+  }  
+  const handleOnchangePassword = (e) => {
+    setPassword(e.target.value);
+  }
+  const handleOnchangeConfirm = (e) => {
+    setConfirm(e.target.value);
+  }
+  const onHandleShow = () => {
+      
     setShowDialog(true);
-    
-    setAccountID(id);
+   
   }
   const onHandleClose = () => {
       setShowDialog(false);
@@ -48,47 +58,54 @@ function TableMappingID({ columns, data, uploadData }) {
     },
     useGlobalFilter 
   );
-  
-  const studentIDOnChangeHandler = (e) => setStudentID(e.target.value);
-  
-  const unmapBtn = (id) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
-    myHeaders.append("Content-Type", "application/json");
+  const RegisterBtnOnClick = (e) => {
+    e.preventDefault();
+    if (password !== confirm) {
+        alert("Password does not match!");
+        return;
+    }
+    if (password === "" || confirm === "") {
+        alert("You must fill in username and password!");
+    }
+    if (username !== "") {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-        "studentID": studentID,
-        "accountID": id
-    });
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-    fetch(process.env.REACT_APP_API_URL + "accounts/mapping", requestOptions)
-    .then(response =>  {
-        console.log('ok');
-        return response.text();
-    })
-    .then(result => {
-      console.log('ok');
-        uploadData();
-        onHandleClose();
-        alert("Updated!");
-    })
-    .catch(error => {
-        console.log('error', error)
-        alert("An error occur");
-    });
+        var raw = JSON.stringify({
+            "username": username,
+            "password": password
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(process.env.REACT_APP_API_URL + "accounts/registeradmin", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result);
+            alert("Register successfully, you can login now!");
+        })
+        .catch(error => {
+            console.log('error', error);
+            alert("Register fail!")
+        });
+    }
   }
   return (
     <div className="row">
+        <div className="col-10">
         <GlobalFilter
         preGlobalFilteredRows={preGlobalFilteredRows}
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
-        />
+        /></div>
+        <div className="col-2">
+            <button className="btn btn-dark btnEdit w-100"  onClick={() => onHandleShow()}> Create </button>
+        </div>
         <table {...getTableProps()} border="1" className="table-data">
           <thead>
               {headerGroups.map((headerGroup) => (
@@ -96,7 +113,6 @@ function TableMappingID({ columns, data, uploadData }) {
                   {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps()}>{column.render("Header")}</th>
                   ))}
-                  <th >Action</th>
               </tr>
               ))}
           </thead>
@@ -107,16 +123,8 @@ function TableMappingID({ columns, data, uploadData }) {
                   
                   <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => {
-                    if (row.values.username !== "root")
                       return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                   })}
-                  { row.values.username !== "root" ? 
-                  <td className="action">
-                      {!data[i].studentID ? 
-                      
-                      <button onClick={() => onHandleShow(row.values.id)} className="white-btn">Map</button>:
-                      <button onClick={() => unmapBtn(row.values.id)} className="black-btn">Unmap</button>}
-                  </td>: ""}
                   
                   </tr>
                   
@@ -127,17 +135,26 @@ function TableMappingID({ columns, data, uploadData }) {
         <div>
           <Modal show={showDialog} onHide={onHandleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Mapping StudentID</Modal.Title>
+              <Modal.Title>Register Admin Account</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Username </Form.Label>
+                        <Form.Control type="text" value={username}  onChange={handleOnchangeUsername}/>
+                    </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label> Student ID </Form.Label>
-                        <Form.Control type="text" value={studentID}  onChange={studentIDOnChangeHandler} />
+                        <Form.Label> Password </Form.Label>
+                        <Form.Control type="text" value={password}  onChange={handleOnchangePassword}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label> Confirm </Form.Label>
+                        <Form.Control type="text" value={confirm}  onChange={handleOnchangeConfirm}/>
                     </Form.Group>
                     <div className="text-center" >
-                        { <button className="btn btn-dark btnEdit"  onClick={() => unmapBtn(accountID)}> SAVE </button> }
+                        <button className="btn btn-dark btnEdit w-100"  onClick={RegisterBtnOnClick}> Register </button>
                     </div>
                 </Form>
             </Modal.Body>
@@ -149,4 +166,4 @@ function TableMappingID({ columns, data, uploadData }) {
   );
 }
 
-export default TableMappingID;
+export default TableAdminAccountPage;

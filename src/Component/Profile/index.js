@@ -72,7 +72,7 @@ const Profile = () => {
 
         console.log(process.env.REACT_APP_API_URL);
 
-        fetch(process.env.REACT_APP_API_URL + "accounts/" + params.id, requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/detail" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
             setStudentID(result.account[0].studentID);

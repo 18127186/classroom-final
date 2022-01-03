@@ -13,6 +13,8 @@ import Grades from './Component/Grades';
 import AdminPage from './Component/AdminPage';
 import MappingIDPage from './Component/MappingIDPage';
 import ListReview from './Component/ListReview';
+import ManageClassAdminPage from './Component/ManageClassAdminPage';
+import AdminAccountPage from './Component/AdminAccountPage';
 function App() {
 
   const [isLogin, setIsLogin] = useState(localStorage.getItem("token") != null);
@@ -42,6 +44,8 @@ function App() {
       <Route path='/classes/grade-reviews/:id' element={<ListReview/>}/>
       <Route path='/admin' element={<AdminPage/>}/>
       <Route path='/mapID' element={<MappingIDPage/>}/>
+      <Route path='/manageclass' element={<ManageClassAdminPage/>}/>
+      <Route path='/adminaccount' element={<AdminAccountPage/>}/>
     </Routes>
     </div>
   );

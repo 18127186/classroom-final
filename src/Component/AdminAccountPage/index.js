@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Link} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css"
-import TableMappingID from "../TableMappingID";
-const MappingIDPage = () => {
+import TableAdminAccountPage from '../TableAdminAccountPage';
+const AdminAccountPage = () => {
     const [data, setData] = useState([]);
     const [loadFirst, setLoadFirst] = useState(true);
     const [loadCheckUser, setLoadCheckUser] = useState(false);
@@ -15,7 +15,7 @@ const MappingIDPage = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        fetch(process.env.REACT_APP_API_URL + "accounts/user" , requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/admin" , requestOptions)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -24,6 +24,7 @@ const MappingIDPage = () => {
                 throw Error(response.status);
             })
             .then(result => {
+                
                 console.log(result);
                 setData(result);
                 setLoadCheckUser(true);
@@ -44,12 +45,12 @@ const MappingIDPage = () => {
             accessor: "id",
           },
           {
-            Header: "Username",
-            accessor: "username",
+            Header: "Name",
+            accessor: "name",
           },
           {
-            Header: "StudentID",
-            accessor: "studentID",
+            Header: "Username",
+            accessor: "username",
           }
         ],
         []
@@ -79,24 +80,24 @@ const MappingIDPage = () => {
             
             <div className="col-2 catalog ">
                 <div className="row">
-                <Link to="/admin" className="text-catalog border-catalog"> Manage Account </Link>
+                <Link to="/admin" className="text-catalog border-catalog "> Manage Account </Link>
                 </div>
                 <div className="row">
-                <Link to="/adminaccount" className="text-catalog border-catalog "> Manage Admin </Link>
+                <Link to="#" className="text-catalog border-catalog selected-catalog"> Manage Admin </Link>
                 </div>
                 <div className="row">
-                <Link to="/manageclass" className="text-catalog center-catalog "> Manage Class </Link>
+                <Link to="/manageclass" className="text-catalog center-catalog"> Manage Class </Link>
                 </div>
                 <div className="row">
-                <Link to="#" className="text-catalog border-catalog selected-catalog"> Mapping Student ID </Link>
+                <Link to="/mapID" className="text-catalog border-catalog "> Mapping Student ID </Link>
                 </div>
             </div>
             <div className="offset-1 col-6">
-                <TableMappingID columns={columns} data={data} uploadData={uploadData} /> 
+                <TableAdminAccountPage columns={columns} data={data} uploadData={uploadData} /> 
             </div>
             
         </div>
     );
 }
 
-export default MappingIDPage;
+export default AdminAccountPage;

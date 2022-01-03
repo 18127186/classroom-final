@@ -2,11 +2,10 @@ import React, {useState} from "react";
 import {Link} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css"
-import TableMappingID from "../TableMappingID";
-const MappingIDPage = () => {
+import TableManageClass from "../TableManageClass";
+const ManageClassAdminPage = () => {
     const [data, setData] = useState([]);
     const [loadFirst, setLoadFirst] = useState(true);
-    const [loadCheckUser, setLoadCheckUser] = useState(false);
     const getInfo = () => {
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -15,7 +14,7 @@ const MappingIDPage = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-        fetch(process.env.REACT_APP_API_URL + "accounts/user" , requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "classes/admin" , requestOptions)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -24,9 +23,8 @@ const MappingIDPage = () => {
                 throw Error(response.status);
             })
             .then(result => {
-                console.log(result);
                 setData(result);
-                setLoadCheckUser(true);
+                console.log(result);
                 
             })
             .catch(error => {
@@ -44,37 +42,27 @@ const MappingIDPage = () => {
             accessor: "id",
           },
           {
-            Header: "Username",
-            accessor: "username",
+            Header: "Name",
+            accessor: "name",
           },
           {
-            Header: "StudentID",
-            accessor: "studentID",
+            Header: "Description",
+            accessor: "description",
+          },
+          {
+            Header: "ID Teacher",
+            accessor: "creator",
           }
         ],
         []
     );
-    const checkUsernameExist = () => {
-        if (loadCheckUser) {
-            let newData = [];
-            for (let index = 0; index <data.length; index++) {
-                if (data[index].username === "") {
-                    data[index].username = data[index].email;
-                }
-                newData.push(data[index]);
-            }
-            setData(newData);
-            setLoadCheckUser(false);
-        }
-    }
     const uploadData = () => {
         getInfo();
     }
-    checkUsernameExist();
     return (
         <div className="row admin-page">
             <div className="row mb-4">
-                <h1 className="text-center ">List Account</h1>
+                <h1 className="text-center ">List Class</h1>
             </div>
             
             <div className="col-2 catalog ">
@@ -85,18 +73,18 @@ const MappingIDPage = () => {
                 <Link to="/adminaccount" className="text-catalog border-catalog "> Manage Admin </Link>
                 </div>
                 <div className="row">
-                <Link to="/manageclass" className="text-catalog center-catalog "> Manage Class </Link>
+                <Link to="#" className="text-catalog center-catalog selected-catalog"> Manage Class </Link>
                 </div>
                 <div className="row">
-                <Link to="#" className="text-catalog border-catalog selected-catalog"> Mapping Student ID </Link>
+                <Link to="/mapID" className="text-catalog border-catalog "> Mapping Student ID </Link>
                 </div>
             </div>
             <div className="offset-1 col-6">
-                <TableMappingID columns={columns} data={data} uploadData={uploadData} /> 
+                <TableManageClass columns={columns} data={data} uploadData={uploadData} /> 
             </div>
             
         </div>
     );
 }
 
-export default MappingIDPage;
+export default ManageClassAdminPage;
