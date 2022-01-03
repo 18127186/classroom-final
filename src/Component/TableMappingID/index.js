@@ -137,7 +137,7 @@ function TableMappingID({ columns, data, uploadData }) {
                         <Form.Control type="text" value={studentID}  onChange={studentIDOnChangeHandler} />
                     </Form.Group>
                     <div className="text-center" >
-                        { <button className="btn btn-dark btnEdit"  onClick={() => unmapBtn(accountID)}> SAVE </button> }
+                        <button type="button" onClick={() => unmapBtn(accountID)} className="btn btn-dark btnEdit"> SAVE </button>
                     </div>
                 </Form>
             </Modal.Body>
