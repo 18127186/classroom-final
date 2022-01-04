@@ -98,6 +98,7 @@ export default function MembersList() {
     const gradesStructure = '/grades/' + params.id;
     const detailURL = '/classes/detail/' + params.id;
     const listAssignmentURL = '/classes/detail/' + params.id + "/assignment";
+    const gradeReviews = '/classes/grade-reviews/' + params.id;
 
     return (
       <div>
@@ -120,6 +121,9 @@ export default function MembersList() {
             </NavLink>
             <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                 Grades Structure
+            </NavLink>
+            <NavLink className="nav-link" to={gradeReviews}>
+                        Grade Reviews
             </NavLink>
             </Navbar.Collapse>
         </Navbar>

@@ -128,6 +128,7 @@ const Grades = () => {
     const listAssignmentURL = '/classes/detail/' + params.id + "/assignment";
     const memberURL = '/classes/members/' + params.id;
     const detailURL = '/classes/detail/' + params.id;
+    const gradeReviews = '/classes/grade-reviews/' + params.id;
 
     const onUpdateGrade = () => {
         setIsUpdate(true);
@@ -421,6 +422,9 @@ const Grades = () => {
                     </NavLink>
                     <NavLink className="nav-link" to='#' hidden={!(role === 'teacher')}>
                         Grades Structure
+                    </NavLink>
+                    <NavLink className="nav-link" to={gradeReviews}>
+                        Grade Reviews
                     </NavLink>
                     </Navbar.Collapse>
                 </Navbar>

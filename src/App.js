@@ -13,6 +13,7 @@ import Grades from './Component/Grades';
 import AdminPage from './Component/AdminPage';
 import MappingIDPage from './Component/MappingIDPage';
 import ListReview from './Component/ListReview';
+import DetailReview from './Component/Review';
 import ManageClassAdminPage from './Component/ManageClassAdminPage';
 import AdminAccountPage from './Component/AdminAccountPage';
 function App() {
@@ -42,6 +43,7 @@ function App() {
       <Route path='/profile/:id' element={<Profile/>}/>
       <Route path='/grades/:id' element={<Grades/>}/>
       <Route path='/classes/grade-reviews/:id' element={<ListReview/>}/>
+      <Route path='/classes/grade-reviews/detail/:idClass/:idReview' element={<DetailReview/>}/>
       <Route path='/admin' element={<AdminPage/>}/>
       <Route path='/mapID' element={<MappingIDPage/>}/>
       <Route path='/manageclass' element={<ManageClassAdminPage/>}/>

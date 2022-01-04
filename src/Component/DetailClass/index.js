@@ -202,6 +202,7 @@ const DetailClass = () => {
     const listAssignmentURL = '/classes/detail/' + params.id + "/assignment";
     const memberURL = '/classes/members/' + params.id;
     const gradesStructure = '/grades/' + params.id;
+    const gradeReviews = '/classes/grade-reviews/' + params.id;
     const renderGradeStructure = () => {
         let gradestructure = [];
         console.log(assignment);
@@ -233,6 +234,9 @@ const DetailClass = () => {
                     </NavLink>
                     <NavLink className="nav-link" to={gradesStructure} hidden={!(userRole === 'teacher')}>
                         Grades Structure
+                    </NavLink>
+                    <NavLink className="nav-link" to={gradeReviews}>
+                        Grade Reviews
                     </NavLink>
                     </Navbar.Collapse>
                 </Navbar>

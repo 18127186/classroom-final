@@ -12,6 +12,7 @@ const ListAssignment = () => {
     const detailURL = '/classes/detail/' + params.id;
     const memberURL = '/classes/members/' + params.id;
     const gradesStructure = '/grades/' + params.id;
+    const gradeReviews = '/classes/grade-reviews/' + params.id;
 
     const [role, setRole] = useState();
     const [arrayAssignment, setArrayAssignment] = useState([]);
@@ -207,6 +208,9 @@ const ListAssignment = () => {
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                     Grades Structure
+                </NavLink>
+                <NavLink className="nav-link" to={gradeReviews}>
+                    Grade Reviews
                 </NavLink>
                 </Navbar.Collapse>
             </Navbar>

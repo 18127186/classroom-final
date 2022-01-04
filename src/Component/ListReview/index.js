@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {  Navbar, Card } from 'react-bootstrap';
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, Link } from "react-router-dom";
 import './index.css'
 
 const ListReview = () => {
     const params = useParams();
+    const listAssignmentURL = '/classes/detail/' + params.id + "/assignment";
     const detailURL = '/classes/detail/' + params.id;
     const memberURL = '/classes/members/' + params.id;
     const gradesStructure = '/grades/' + params.id;
@@ -63,6 +64,7 @@ const ListReview = () => {
     }, [params.id]);
 
     const RenderAReview = (id, student_id, assignment) => {
+        const detailURL = '/classes/grade-reviews/detail/' + params.id + '/' + id
         return(
             <Card className="review mx-auto">
                 <Card.Header as= "h2" className="head-center"> Grade Review {id} </Card.Header>
@@ -73,8 +75,9 @@ const ListReview = () => {
                 </Card.Body>
                 <Card.Footer className="text-center">
                     <div className="footer-viewBtn text-center">
-                        <button className="btn btn-danger btnView"
-                                > View </button>
+                        <button className="btn btn-danger btnView">
+                        <Link className="viewlink" to={detailURL}> View </Link>
+                        </button>
                     </div>
                 </Card.Footer>
 
@@ -96,11 +99,14 @@ const ListReview = () => {
                 <NavLink className="nav-link" to={memberURL}>
                     Member
                 </NavLink>
-                <NavLink className="nav-link" to='#'>
+                <NavLink className="nav-link" to={listAssignmentURL}>
                     List Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                     Grades Structure
+                </NavLink>
+                <NavLink className="nav-link" to='#'>
+                    Grade Reviews
                 </NavLink>
                 </Navbar.Collapse>
             </Navbar>
