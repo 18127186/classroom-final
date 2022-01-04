@@ -81,11 +81,13 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
   const onHandleProfileOnClick = () => { navigate(url); }
   const onHandleGoHome = () => {navigate("/")}
  
+  const isAdmin = localStorage.getItem("isAdmin");
   return (
     <Box className="nav-bar" sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {!isAdmin ?
+           <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -93,11 +95,12 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> : ""}
+          
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {brandName}
           </Typography>
-            <div>
+          {!isAdmin ? <div>  
             <IconButton
                 size="large"
                 aria-label="home"
@@ -135,7 +138,19 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
               >
                 <LogoutIcon/>
               </IconButton>
-            </div>
+            </div> : 
+            <div>  
+              <IconButton
+                size="large"
+                aria-label="logout"
+                aria-controls="menu-appbar"
+                color="inherit"
+                onClick={logout}
+              >
+                <LogoutIcon/>
+              </IconButton>
+            </div>}
+            
         </Toolbar>
       </AppBar>
       <Modal show={show} onHide={onHandleModalClose}>
