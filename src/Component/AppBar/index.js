@@ -22,45 +22,10 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
 	const [show, setShow] = React.useState(false);
   const [notiData, setNotiData] = React.useState([]); 
   const [isHiddenNotification, setIsHiddenNotification] = React.useState(true);
-  const [hasNewNoti, setHasNewNoti ] = React.useState(false);
   const [url] = React.useState("/profile/" + localStorage.getItem("userId"));
 
 	let navigate = useNavigate();
   let location = useLocation();
-
-  const getNotification = async() => {
-    let result = [];
-    let b = {a: "a"};
-    let c = {a: "b"};
-
-    result.push(b);
-    result.push(c);
-    result.push(c);
-    
-    setNotiData(result);
-
-    // var myHeaders = new Headers();
-    //     myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
-
-    //     var requestOptions = {
-    //         method: 'GET',
-    //         headers: myHeaders,
-    //         redirect: 'follow'
-    //     };
-
-    //     await fetch("notification", requestOptions)
-    //     .then(response => response.json())
-    //     .then(result => {
-    //       if (result) {
-    //         console.log(result)
-    //         //setNotiData(result);
-    //       }
-    //     })
-    //     .catch(error => {
-    //         console.log('error', error);
-    //         logout();
-    //     });
-  }
 
   const setNoti = () => {
 
@@ -122,7 +87,28 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
     }
   }
 
-  React.useEffect(getNotification, []);
+  React.useEffect(() => {
+    var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch(process.env.REACT_APP_API_URL + "notification", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          if (result) {
+            setNotiData(result);
+          }
+        })
+        .catch(error => {
+            console.log('error', error);
+            logout();
+        });
+  }, []);
   
 	const nameOnChangeHandler = (e) => setName(e.target.value);
   const descriptionOnChangeHandler = (e) => setDescription(e.target.value);
@@ -187,7 +173,7 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
               color="inherit"
               onClick={onHandleNotificationOnClick}
               className="m-1">
-              {hasNewNoti? <NotificationsIcon   style={{ color: "red" }}/> : <NotificationsIcon />}
+              <NotificationsIcon />
             </IconButton>
               <IconButton
                 size="large"

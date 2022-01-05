@@ -92,7 +92,8 @@ const DetailReview = () => {
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
-            "update_grade": update_grade
+            "update_grade": update_grade,
+            "studentId": data.student_id
         });
 
         var requestOptions = {
