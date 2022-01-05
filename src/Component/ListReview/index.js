@@ -41,7 +41,6 @@ const ListReview = () => {
 
     useEffect(() => {
         getRole();
-
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
 
@@ -51,10 +50,11 @@ const ListReview = () => {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_API_URL + "reviews/" + params.id, requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "reviews/" + params.id + "/" + localStorage.getItem("studentID"), requestOptions)
         .then(response => response.json())
         .then(result => {
             if (result) {
+                console.log(result);
                 setListReview(result);
             }
         })
@@ -66,7 +66,7 @@ const ListReview = () => {
     const RenderAReview = (id, student_id, assignment) => {
         const detailURL = '/classes/grade-reviews/detail/' + params.id + '/' + id
         return(
-            <Card className="review mx-auto">
+            <Card key={id} className="review mx-auto">
                 <Card.Header as= "h2" className="head-center"> Grade Review {id} </Card.Header>
                 <Card.Body>            
                     {/* <Card.Title> Abc </Card.Title> */}

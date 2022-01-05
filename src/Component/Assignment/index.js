@@ -1,15 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { Form, Modal, Row, Col  } from 'react-bootstrap';
 import { Card} from 'react-bootstrap';
 import './index.css';
 import AsyncDownloadButton from '../AsyncDownloadButton';
 import * as XLSX from 'xlsx';
+import { data } from 'jquery';
 
 const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) => {
     const [show, setShow] = useState(false);
     const [uploadModalShow, setUploadModalShow] = useState(false);
+    const [reviewModalShow, setReviewModalShow] = useState(false);
     const [topic, setTopic] = useState(dataAssignment.topic);
     const [grade, setGrade] = useState(dataAssignment.grade);
     const [description, setDescription] = useState(dataAssignment.description);
@@ -29,6 +31,10 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
     const [dayUpdate, setDayUpdate] = useState("1");
     const [monthUpdate, setMonthUpdate] = useState("1");
     const [yearUpdate, setYearUpdate] = useState("2020");
+    const [expectGrade, setExpectGrade] = useState();
+    const [explanation, setExplanation] = useState();
+
+    const [point, setPoint] = useState();
 
     const topicOnChangeHandler = (e) => setTopicUpdate(e.target.value);
     const gradeOnChangeHandler = (e) => setGradeUpdate(e.target.value);
@@ -38,10 +44,15 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
     const dayOnChangeHandler = (e) => setDayUpdate(e.target.value);
     const monthOnChangeHandler = (e) => setMonthUpdate(e.target.value);
     const yearOnChangeHandler = (e) => setYearUpdate(e.target.value);
+    const expectGradeOnChangeHandler = (e) => setExpectGrade(e.target.value);
+    const explanationOnChangeHandler = (e) => setExplanation(e.target.value);
 	const onHandleModalClose = () => setShow(false);
 	const onHandleModalShow = () => setShow(true);
     const onHandleUploadModalClose = () => setUploadModalShow(false);
 	const onHandleUploadModalShow = () => setUploadModalShow(true);
+    const onHandleReviewModalShow = () => setReviewModalShow(true);
+    const onHandleReviewModalClose = () => setReviewModalShow(false);
+
     const fileOnChangeHandler = (e) => {
         let file = e.target.files[0];
 
@@ -190,6 +201,70 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         .catch(error => console.log('error', error));
     }
 
+    const getGrade = (assign_id, student_id) => {
+        let grade;
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch(process.env.REACT_APP_API_URL + "grades/get-one-grade/" + assign_id + "/" + student_id, requestOptions)
+        .then(response => response.json())
+        .then(result =>
+            setPoint(result[0].grade))
+        .catch(error => console.log('error', error));
+    }
+
+    useEffect(() => {
+        getGrade(dataAssignment.id, localStorage.getItem("studentID"))   
+    }, []);
+
+    const sendReviewRequest = () => {
+        // var raw = JSON.stringify({
+        //     "assign_id": dataAssignment.id,
+        //     "student_id": localStorage.getItem("studentID"),
+        //     "expect_grade": expectGrade,
+        //     "explanation": explanation,
+        //     "current_grade": point 
+        // }); 
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify({
+            "assign_id": dataAssignment.id,
+            "student_id": localStorage.getItem("studentID"),
+            "expect_grade": expectGrade,
+            "explanation": explanation,
+            "current_grade": point
+        });
+        
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "reviews/create", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                alert("Requested!");
+                onHandleReviewModalClose();
+            })
+            .catch(error => {
+                console.log('error', error)
+                alert("Fail!");
+                onHandleReviewModalClose();
+            });
+    }
+
     return( 
     <div>
     <Card className="assignment mx-auto">
@@ -197,7 +272,9 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         <Card.Body>            
             {/* <Card.Title> Abc </Card.Title> */}
             <Card.Text> {description} </Card.Text> 
-            <Card.Text> Point: {grade} / 10</Card.Text>   
+            {role === 'student' ? 
+            <Card.Text> Point: {point}</Card.Text> :
+            <Card.Text> Point: {grade} / 10</Card.Text> } 
             <Card.Text> {dataAssignment.deadline} </Card.Text>   
         </Card.Body>
         <Card.Footer className="text-center">
@@ -210,6 +287,11 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
                 <button className="btn btn-success m-2" 
                         onClick={onHandleUploadModalShow}> Upload grades file </button>
                 <a className="btn btn-success m-2" href="/Template/grades_assignment_template.xlsx"> Download Template Student List </a>
+            </div>
+            <div className="footer-createAssignBtn text-center" hidden={!(role === 'student')}>
+                <button className="btn btn-info btnDeleteAssign" 
+                        onClick={onHandleReviewModalShow}> Request a grade review </button>
+                
             </div>
         </Card.Footer>
 
@@ -314,6 +396,42 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
                     <button className="btn btn-success addClassButton" onClick={onHandleUploadModalClose}> Close </button>
                 </div>
             </Modal.Footer>
+        </Modal>
+
+        <Modal show={reviewModalShow} onHide={onHandleReviewModalClose} dialogClassName="modal-70w">
+                <Modal.Header closeButton>
+                <Modal.Title>Request a grade review</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Row>
+                            <Col sm={8}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label> Topic </Form.Label>
+                                    <Form.Label> {dataAssignment.topic} </Form.Label>
+                                </Form.Group>
+                            </Col>
+                            <Col sm={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label> Expectation grade </Form.Label>
+                                <Form.Control type="number"
+                                            onChange={expectGradeOnChangeHandler} />
+                            </Form.Group>
+                            </Col>
+                        </Row>
+                        <Form.Group className="mb-3">
+                            <Form.Label> Explanation </Form.Label>
+                            <Form.Control as="textarea"
+                                        style={{ height: '100px' }}
+                                        onChange={explanationOnChangeHandler} />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="footer-createAssignBtn text-center">
+                        <button className="btn btn-dark btnCreateAssign" onClick={sendReviewRequest}> Send Request </button>
+                    </div>
+                </Modal.Footer>
         </Modal>
     
     </div>

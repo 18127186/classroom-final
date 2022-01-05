@@ -63,6 +63,7 @@ const Login = ({onLoginSuccess}) => {
                 console.log(result)
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
+                localStorage.setItem("studentID", result.user.studentID);
                 setIsLogin(true);
                 onLoginSuccess();
             })
@@ -99,6 +100,7 @@ const Login = ({onLoginSuccess}) => {
                 console.log(result)
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
+                localStorage.setItem("studentID", result.user.studentID);
                 setIsLogin(true);
                 onLoginSuccess();
             })
@@ -149,6 +151,7 @@ const Login = ({onLoginSuccess}) => {
                 else {
                     localStorage.setItem("token", result.token);
                     localStorage.setItem("userId", result.user.id);
+                    localStorage.setItem("studentID", result.user.studentID);
                     setIsLogin(true);
                     
                     onLoginSuccess();

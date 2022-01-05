@@ -104,13 +104,17 @@ const ListAssignment = () => {
     }
 
     const getListAssignment = () => {
-        return arrayAssignment.map((ele) => 
-        <Assignment 
-            key={ele.id} 
-            onDeleteSuccess={() => onDeleteSuccess(ele.id)} 
-            onUpdateSuccess={() => onUpdateSuccess(ele.id)} 
-            dataAssignment={ele}
-            role={role}/>)
+        let list = [];
+        arrayAssignment.map((ele) => {
+            list.push(<Assignment 
+                key={ele.id} 
+                onDeleteSuccess={() => onDeleteSuccess(ele.id)} 
+                onUpdateSuccess={() => onUpdateSuccess(ele.id)} 
+                dataAssignment={ele}
+                role={role}/>
+            )}
+        )
+        return list;
     }
 
     const onDeleteSuccess = (idAssign) => {
