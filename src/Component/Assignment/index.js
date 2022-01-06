@@ -202,7 +202,6 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
     }
 
     const getGrade = (assign_id, student_id) => {
-        let grade;
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
         myHeaders.append("Content-Type", "application/json");
@@ -241,7 +240,8 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
             "student_id": localStorage.getItem("studentID"),
             "expect_grade": expectGrade,
             "explanation": explanation,
-            "current_grade": point
+            "current_grade": point,
+            "id_class": params.id
         });
         
         var requestOptions = {

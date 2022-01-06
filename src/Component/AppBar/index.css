@@ -16,8 +16,8 @@
     background-color: rgb(251, 252, 241) !important;
     z-index: 10;
     height: 220px;
+    overflow: scroll !important;
     position: absolute;
-    overflow: scroll;
 }
 
 .noti {
