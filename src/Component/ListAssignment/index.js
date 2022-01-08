@@ -64,20 +64,16 @@ const ListAssignment = () => {
 
         fetch(process.env.REACT_APP_API_URL + "assignment/" + params.id, requestOptions)
         .then(response =>  {
-            console.log(response);
             return response.text();
         })
         .then(result => {
-            console.log(result);
             alert("Assignment Created!");
-            //window.location.reload();
             var newArrayAssignment = arrayAssignment.slice();
             newArrayAssignment.push(newAssign);
             setArrayAssignment(newArrayAssignment);
             onHandleModalClose();
         })
         .catch(error => {
-            console.log('error', error)
             alert("An error occur");
         });
     }
@@ -99,7 +95,6 @@ const ListAssignment = () => {
 
         fetch(process.env.REACT_APP_API_URL + "assignment/updateRank/" + params.id, requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
         .catch(error => console.log('error', error));
     }
 
@@ -155,7 +150,6 @@ const ListAssignment = () => {
         await fetch(process.env.REACT_APP_API_URL + "accounts/role/" + localStorage.getItem("userId"), requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result[0].role);
             setRole(result[0].role)
 
         })

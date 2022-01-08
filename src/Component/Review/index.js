@@ -42,7 +42,6 @@ const DetailReview = () => {
         fetch(process.env.REACT_APP_API_URL + "accounts/role/" + localStorage.getItem("userId"), requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result[0].role);
             setRole(result[0].role)
 
         })
@@ -109,7 +108,6 @@ const DetailReview = () => {
             alert("Update grade successfully!")
         })
         .catch(error => {
-            console.log('error', error)
             alert("Update fail!")
         });
     }

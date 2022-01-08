@@ -8,10 +8,11 @@ import './index.css';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import AdminPage from "../AdminPage";
-const Login = ({onLoginSuccess}) => {
+const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [isLogin, setIsLogin] = useState(localStorage.getItem("token") != null)
+
     const paperStyle = {
         padding: 20,
         height: '70vh',
@@ -36,7 +37,6 @@ const Login = ({onLoginSuccess}) => {
     }
 
     const responseFacebook = response => {
-        console.log(response);
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -52,7 +52,6 @@ const Login = ({onLoginSuccess}) => {
 
         fetch(process.env.REACT_APP_API_URL + "auth/facebook-sign-in", requestOptions)
             .then(response => {
-                console.log(response)
                 if (response.ok) {
                     return response.json();
                 }
@@ -60,7 +59,6 @@ const Login = ({onLoginSuccess}) => {
                 throw Error(response.status);
             })
             .then(result => {
-                console.log(result)
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
                 localStorage.setItem("studentID", result.user.studentID);
@@ -73,7 +71,6 @@ const Login = ({onLoginSuccess}) => {
     }
 
     const onSuccessGoogle = response => {
-        console.log(response);
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -89,7 +86,6 @@ const Login = ({onLoginSuccess}) => {
 
         fetch(process.env.REACT_APP_API_URL + "auth/google-sign-in", requestOptions)
             .then(response => {
-                console.log(response)
                 if (response.ok) {
                     return response.json();
                 }
@@ -97,7 +93,6 @@ const Login = ({onLoginSuccess}) => {
                 throw Error(response.status);
             })
             .then(result => {
-                console.log(result)
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
                 localStorage.setItem("studentID", result.user.studentID);
@@ -127,7 +122,6 @@ const Login = ({onLoginSuccess}) => {
 
         await fetch(process.env.REACT_APP_API_URL + "login", requestOptions)
             .then(response => {
-                console.log(response)
                 if (response.ok) {
                     return response.json();
                 }
@@ -158,7 +152,6 @@ const Login = ({onLoginSuccess}) => {
                 }
             })
             .catch(error => {
-                console.log('error', error)
                 alert("Incorrect username or password!");
             });
     }
@@ -211,7 +204,7 @@ const Login = ({onLoginSuccess}) => {
             <div>
             { isLogin ?
             
-            <ListClassRoom key={isLogin} onLogoutSuccess={onLogoutSuccess}/> :
+            <ListClassRoom key={isLogin} onLogoutSuccess={onLogoutSuccess} setTrigger={setTrigger} reloadTrigger={reloadTrigger}/> :
 
             <Grid>
                 <Paper elevation={10} style ={paperStyle}>

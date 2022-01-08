@@ -54,7 +54,6 @@ function Table({ columns, data, uploadData }) {
 	    setName(result.account[0].name);
       setAddress(result.account[0].address);
       setPhone(result.account[0].phone);
-      console.log(result);
       setShowDialog(true);
     })
     .catch(error => {
@@ -142,7 +141,6 @@ function Table({ columns, data, uploadData }) {
 
     fetch(process.env.REACT_APP_API_URL + "accounts/update/"+ accountID, requestOptions)
     .then(response =>  {
-        console.log(response);
         return response.text();
     })
     .then(result => {
@@ -151,7 +149,6 @@ function Table({ columns, data, uploadData }) {
         alert("Updated!");
     })
     .catch(error => {
-        console.log('error', error)
         alert("An error occur");
     });
   }
@@ -186,7 +183,6 @@ function Table({ columns, data, uploadData }) {
                   { row.values.username !== "root" ? 
                   <td className="action">
                       <button onClick={() => onHandleShow(row.values.id)} className="white-btn">Edit</button>
-                      {console.log(data[i])}
                       {data[i].ban === 1 ? 
                       <button onClick={() => lockAccount(row.values.id)} className="black-btn">Unlock</button>:
                       <button onClick={() => lockAccount(row.values.id)} className="black-btn">Lock</button>}

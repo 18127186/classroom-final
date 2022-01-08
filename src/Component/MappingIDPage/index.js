@@ -24,7 +24,6 @@ const MappingIDPage = () => {
                 throw Error(response.status);
             })
             .then(result => {
-                console.log(result);
                 setData(result);
                 setLoadCheckUser(true);
                 

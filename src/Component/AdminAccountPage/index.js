@@ -25,7 +25,6 @@ const AdminAccountPage = () => {
             })
             .then(result => {
                 
-                console.log(result);
                 setData(result);
                 setLoadCheckUser(true);
                 

@@ -84,7 +84,6 @@ export default function MembersList() {
         .then(response => response.json())
         .then(result => {
             setRole(result[0].role)
-            console.log(result[0].role);
         })
         .catch(error => console.log('error', error));
     }

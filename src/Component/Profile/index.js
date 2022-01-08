@@ -42,15 +42,12 @@ const Profile = () => {
 
         fetch(process.env.REACT_APP_API_URL + "accounts/update", requestOptions)
         .then(response =>  {
-            console.log(response);
             return response.text();
         })
         .then(result => {
-            console.log(result);
             alert("Updated!");
         })
         .catch(error => {
-            console.log('error', error)
             alert("An error occur");
         });
     }
@@ -69,8 +66,6 @@ const Profile = () => {
             headers: myHeaders,
             redirect: 'follow'
         };
-
-        console.log(process.env.REACT_APP_API_URL);
 
         fetch(process.env.REACT_APP_API_URL + "accounts/detail" + params.id, requestOptions)
         .then(response => response.json())

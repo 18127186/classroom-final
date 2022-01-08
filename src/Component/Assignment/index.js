@@ -105,8 +105,6 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
         myHeaders.append("Content-Type", "application/json");
 
-        console.log(fileData);
-
         var raw = JSON.stringify({
             "listGrades": fileData
         });
@@ -121,7 +119,6 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         fetch(process.env.REACT_APP_API_URL + "grades/uploadGrades/" + params.id + "/" + dataAssignment.id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             alert(result.message);
             setUploadModalShow(false)
         })
@@ -149,20 +146,16 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
             redirect: 'follow'
         };
 
-        console.log(process.env.REACT_APP_API_URL + "assignment/delete/" + params.id + "/" + dataAssignment.id);
         fetch(process.env.REACT_APP_API_URL + "assignment/delete/" + params.id + "/" + dataAssignment.id, requestOptions)
         .then(response =>  {
-            console.log(response);
             return response.text();
         })
         .then(result => {
-            console.log(result);
             alert("Assignment Deleted!");
             //window.location.reload();
             onDeleteSuccess();
         })
         .catch(error => {
-            console.log('error', error)
             alert("An error occur");
         });
     }
@@ -254,12 +247,10 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         fetch(process.env.REACT_APP_API_URL + "reviews/create", requestOptions)
             .then(response => response.text())
             .then(result => {
-                console.log(result);
                 alert("Requested!");
                 onHandleReviewModalClose();
             })
             .catch(error => {
-                console.log('error', error)
                 alert("Fail!");
                 onHandleReviewModalClose();
             });

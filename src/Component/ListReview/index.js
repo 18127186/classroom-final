@@ -32,7 +32,6 @@ const ListReview = () => {
         await fetch(process.env.REACT_APP_API_URL + "accounts/role/" + localStorage.getItem("userId"), requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result[0].role);
             setRole(result[0].role)
 
         })
@@ -54,7 +53,6 @@ const ListReview = () => {
         .then(response => response.json())
         .then(result => {
             if (result) {
-                console.log(result);
                 setListReview(result);
             }
         })

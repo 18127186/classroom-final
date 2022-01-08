@@ -17,24 +17,27 @@ import DetailReview from './Component/Review';
 import ManageClassAdminPage from './Component/ManageClassAdminPage';
 import AdminAccountPage from './Component/AdminAccountPage';
 function App() {
-
   const [isLogin, setIsLogin] = useState(localStorage.getItem("token") != null);
+  const [reloadTrigger, setReloadTrigger] = React.useState(false);
+
   const onLogoutSuccess = () => {
     setIsLogin(false);
     localStorage.clear();
-    console.log("Logout success");
   }
   const onLoginSuccess = () => {
     setIsLogin(true);
-    console.log("Login success");
+  }
+
+  const setTrigger = () => {
+    setReloadTrigger(!reloadTrigger);
   }
 
   return  (
     <div>
-      { isLogin ? <TopNavBar brandName={""} onLogoutSuccess={onLogoutSuccess}></TopNavBar> : 
+      { isLogin ? <TopNavBar brandName={""} onLogoutSuccess={onLogoutSuccess} setTrigger={setTrigger}></TopNavBar> : 
       <div></div>}
     <Routes>
-      <Route path='/' element={<Login onLoginSuccess={onLoginSuccess}/>}/>
+      <Route path='/' element={<Login onLoginSuccess={onLoginSuccess} setTrigger={setTrigger} reloadTrigger={reloadTrigger}/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/classes/detail/:id' element={<DetailClass/>}/>
       <Route path='/classes/detail/:id/assignment' element={<ListAssignment/>}/>

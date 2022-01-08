@@ -61,7 +61,6 @@ function TableManageClass({ columns, data, uploadData }) {
     fetch(process.env.REACT_APP_API_URL + "assignment/" + id, requestOptions)
     .then(response => response.json())
     .then(result => {
-        console.log(result);
         setAssignment(result);
     })
     .catch(error => {
@@ -102,7 +101,6 @@ function TableManageClass({ columns, data, uploadData }) {
   }
   const renderGradeStructure = () => {
     let gradestructure = [];
-    console.log(assignment);
     for (let index = 0; index < assignment.length; index++) {
         gradestructure.push(<Card.Text> {assignment[index].topic} : {assignment[index].grade}đ </Card.Text>)
     }

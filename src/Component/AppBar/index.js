@@ -16,7 +16,7 @@ import './index.css'
 import Notification from '../Notification';
 import { Card } from "@material-ui/core";
 
-export default function TopNavBar({ brandName, onLogoutSuccess }) {
+export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
 	const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
 	const [show, setShow] = React.useState(false);
@@ -29,13 +29,18 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
 
   const setNoti = () => {
 
-    if (notiData) {
+    if (notiData.length > 0) {
       return notiData.map((ele) => <Notification data={ele}/>)
     }
   }
 
 	const onSubmitHandler = async(e) => {
 		e.preventDefault();
+
+    if (!name || name === "") {
+      alert("Class name cannot be empty!");
+      return;
+    }
 
 		var myHeaders = new Headers();
 		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -55,20 +60,15 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
 
 		await fetch(process.env.REACT_APP_API_URL + "classes", requestOptions)
 			.then(response => {
-					console.log(response)
 					if (response.ok) {
-              window.location.reload();
+              setTrigger();
 							return response.json();
 					}
 
 					throw Error(response.status);
 			})
-			.then(() => {
-				navigate("/");
-			})
 			.catch(error => {
-					console.log('error', error)
-					alert("Add class fail");
+					alert(error);
 			})
       .finally(() => {
         onHandleModalClose();
@@ -78,7 +78,7 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
   const logout = () => {
     localStorage.removeItem("token");
     onLogoutSuccess();
-    console.log("Location: " + location.pathname);
+
     if (location.pathname !== "/") {
       navigate("/")
     }
@@ -106,7 +106,6 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
         })
         .catch(error => {
             console.log('error', error);
-            logout();
         });
   }, []);
   
@@ -207,23 +206,20 @@ export default function TopNavBar({ brandName, onLogoutSuccess }) {
         <Modal.Title>Adding Classroom</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form onSubmit={onSubmitHandler}>
-                <div>
-                    <div className="addClassInput">
-                        <input type="text" className="form-control" placeholder="New class name..." onChange={nameOnChangeHandler} />
-                    </div>
-                    <div className="addClassInput">
-                        <input type="text" className="form-control" placeholder="Description..." onChange={descriptionOnChangeHandler} />
-                    </div>
-                </div>
-                <div className="text-center">
-                  <button type="submit" className="btn btn-success addClassButton"> Add Class </button>
-                  <button className="btn btn-success addClassButton" onClick={onHandleModalClose}> Close </button>
-                </div>
-            </form>
+          <div>
+              <div className="addClassInput">
+                  <input type="text" className="form-control" placeholder="New class name..." onChange={nameOnChangeHandler} />
+              </div>
+              <div className="addClassInput">
+                  <input type="text" className="form-control" placeholder="Description..." onChange={descriptionOnChangeHandler} />
+              </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-
+        <div className="text-center w-100">
+                  <button type="submit" className="btn btn-success addClassButton" onClick={onSubmitHandler}> Add Class </button>
+                  <button className="btn btn-success addClassButton" onClick={onHandleModalClose}> Close </button>
+                </div>
         </Modal.Footer>
     </Modal>
     </Box>

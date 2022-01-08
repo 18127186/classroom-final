@@ -12,7 +12,6 @@ const GradeOfStudent = ({dataGrade, onUpdateGrade}) => {
 
     const onBlurHandler = (e) => {
         e.preventDefault();
-        console.log(dataGrade.student_id + ": " + grade + ": "+ dataGrade.assignment_id);
 
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));

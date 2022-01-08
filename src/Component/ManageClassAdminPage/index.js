@@ -24,7 +24,6 @@ const ManageClassAdminPage = () => {
             })
             .then(result => {
                 setData(result);
-                console.log(result);
                 
             })
             .catch(error => {

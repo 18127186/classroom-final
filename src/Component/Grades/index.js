@@ -78,8 +78,6 @@ const Grades = () => {
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
         myHeaders.append("Content-Type", "application/json");
 
-        console.log(fileData);
-
         var raw = JSON.stringify({
             "listStudent": fileData
         });
@@ -94,7 +92,6 @@ const Grades = () => {
         fetch(process.env.REACT_APP_API_URL + "classes/uploadListStudent/" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             alert(result.message);
             setShowUploadModal(false);
         })
@@ -136,7 +133,6 @@ const Grades = () => {
 
     //5th
     const renderRow = (grade, listAssignMent , studentid) => {
-        console.log(grade);
         var listData = [];
         var totalGrade = 0;
         var total = 0;
@@ -185,11 +181,10 @@ const Grades = () => {
         })
         .catch(error => console.log('error', error));
     }
+
     const checkExistStudentInStudentsList = (students, listAllStudentOfClass, listStudentHaveAccount) => {
         const newList = [];
         
-        console.log(students);
-        console.log(listAllStudentOfClass);
         for (let indexListMember= 0; indexListMember < listAllStudentOfClass.length; indexListMember++) {
             let flag = false;
             for (let indexStudent = 0; indexStudent < students.length; indexStudent++) {
@@ -237,8 +232,6 @@ const Grades = () => {
         .then(result => {
             
             students = checkExistStudentInStudentsList(students, listAllStudentOfClass, result);
-            console.log("student:");
-            console.log(students);
             const listData = [];
             students.map((student, index) => {
                 listData.push(
@@ -366,14 +359,12 @@ const Grades = () => {
         await fetch(process.env.REACT_APP_API_URL + "grades/onemember/" + id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             setDataMappingStudent({
                 studentID: result[0].studentID,
                 name: result[0].name,
                 phone: result[0].phone,
                 address: result[0].address
             });
-            console.log(dataMappingStudent);
         })
         .catch(error => console.log('error', error));
     }

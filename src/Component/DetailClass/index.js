@@ -12,6 +12,7 @@ import Select from '@mui/material/Select';
 import {Typography} from '@material-ui/core';
 
 import { Card} from 'react-bootstrap';
+import { TextField } from '@mui/material';
 
 const DetailClass = () => {
     const [data, setData] = useState({
@@ -23,8 +24,10 @@ const DetailClass = () => {
             linkInvite: ""
         });
     const [loadFirst, setLoadFirst] = useState(true);
-    const [inviteLinkStudent, setInviteLinkStudent] = useState();
-    const [inviteLinkTeacher, setInviteLinkTeacher] = useState();
+    const [inviteLinkStudent, setInviteLinkStudent] = useState("");
+    const [inviteLinkTeacher, setInviteLinkTeacher] = useState("");
+    const [inviteCodeStudent, setInviteCodeStudent] = useState("");
+    const [inviteCodeTeacher, setInviteCodeTeacher] = useState("");
     const [showDialog, setShowDialog] = useState(false);
     const [email, setEmail] = useState("");
     const [roleInvite, setRoleInvite] = useState("Student");
@@ -57,7 +60,7 @@ const DetailClass = () => {
         });
     }
 
-    const getInviteLink = async (id,role) => { //truyen role vo day nhe bro
+    const getInviteLink = async (id) => { //truyen role vo day nhe bro
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
 
@@ -66,14 +69,14 @@ const DetailClass = () => {
             headers: myHeaders
         };
 
-        await fetch(process.env.REACT_APP_API_URL + "classes/invitelink/" + id + "/" + role, requestOptions)
+        await fetch(process.env.REACT_APP_API_URL + "classes/invitelink/" + id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log("into")
-            if (role === 'teacher') {
-                setInviteLinkTeacher(result);
-            } else if (role === 'student') {
-                setInviteLinkStudent(result);
+            if (result) {
+                setInviteLinkTeacher(result.teacher_iToken);
+                setInviteLinkStudent(result.student_iToken);
+                setInviteCodeTeacher(result.student_iCode);
+                setInviteCodeStudent(result.student_iCode);
             }
         })
         .catch(error => {
@@ -145,13 +148,12 @@ const DetailClass = () => {
             headers: myHeaders,
             body: raw,
             redirect: 'follow'
-            };
+        };
 
         await fetch(process.env.REACT_APP_API_URL + "accounts/role/" + localStorage.getItem("userId"), requestOptions)
         .then(response => response.json())
         .then(result => {
             setUserRole(result[0].role)
-            console.log(result[0].role);
         })
         .catch(error => console.log('error', error));
     }
@@ -184,7 +186,6 @@ const DetailClass = () => {
         fetch(process.env.REACT_APP_API_URL + "assignment/" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             setAssignment(result);
         })
         .catch(error => {
@@ -193,8 +194,7 @@ const DetailClass = () => {
     }
     if (loadFirst) {
         getDetail(params.id);
-        getInviteLink(params.id, 'student');
-        getInviteLink(params.id, 'teacher');
+        getInviteLink(params.id);
         getRole();
         getListAssignment()
         setLoadFirst(false);
@@ -205,7 +205,6 @@ const DetailClass = () => {
     const gradeReviews = '/classes/grade-reviews/' + params.id;
     const renderGradeStructure = () => {
         let gradestructure = [];
-        console.log(assignment);
         for (let index = 0; index < assignment.length; index++) {
             gradestructure.push(<Card.Text> {assignment[index].topic} : {assignment[index].grade}đ </Card.Text>)
         }
@@ -282,20 +281,31 @@ const DetailClass = () => {
                         </Modal.Header>
                         <Modal.Body>
                             <form onSubmit={onSubmitHandler}>
-                                <div className="mt-3">
+                                <strong style={{ fontSize: 17 }}> Invitation by link </strong>
+                                <div className="mt-2">
                                     <Typography style={{wordWrap: 'break-word'}}>
                                         Link Invite Student: {inviteLinkStudent}
                                     </Typography>
                                 </div>
-                                <div className="mt-3 mb-3">
+                                <div className="mt-2 mb-2">
                                     <Typography style={{wordWrap: 'break-word'}}>
                                         Link Invite Teacher: {inviteLinkTeacher}
                                     </Typography>
                                 </div>
-                                <div>
-                                    <FormControl style={{width: 120, margin: '10px 0'}}>
+                                <strong style={{ fontSize: 17 }}> Invitation by code </strong>
+                                <div className="mt-2 text-center py-1">
+                                    <TextField sx={{ mr: 3,'.MuiOutlinedInput-root': { height: 50 }}}
+                                        label="Code Invite Student" 
+                                        value={inviteCodeStudent}/>
+                                    <TextField sx={{ ml: 3, '.MuiOutlinedInput-root': { height: 50 }}}
+                                        label="Code Invite Teacher"
+                                        value={inviteCodeTeacher}/>
+                                </div>
+                                <strong style={{ fontSize: 17 }}> Send invitation by email </strong>
+                                <div className='d-flex mt-2'>
+                                    <FormControl style={{width: "20%", margin: 5, marginTop: 12}}>
                                         <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                                        <Select
+                                        <Select sx={{ height: "40px"}}
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             value={roleInvite}
@@ -306,14 +316,12 @@ const DetailClass = () => {
                                             <MenuItem value={"teacher"}>Teacher</MenuItem>
                                         </Select>
                                         </FormControl>
-                                </div>
-                                <div className="row">
-                                    <div className="col-10">
-                                        <input type="text" name="name" className="form-control" placeholder="Send this invitaion to email..." onChange={onChangeHandler} />
-                                    </div>
-                                    <div className="col">
-                                        <button type="submit" className="btn btn-success"> <SendIcon/> </button>
-                                    </div>
+                                        <div className='pt-2' style={{ flexGrow: 1, margin: 5 }} >
+                                            <input type="text" style={{ height:40 }} name="name" className="form-control" placeholder="Email..." onChange={onChangeHandler} />
+                                        </div>
+                                        <div className='pt-2' style={{ margin: 5 }} >
+                                            <button type="submit" className="btn btn-success"> <SendIcon/> </button>
+                                        </div>
                                 </div>
                             </form>
                         </Modal.Body>

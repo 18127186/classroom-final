@@ -68,20 +68,17 @@ function TableMappingID({ columns, data, uploadData }) {
     };
     fetch(process.env.REACT_APP_API_URL + "accounts/mapping", requestOptions)
     .then(response =>  {
-        console.log(response);
         if (!response.ok) alert("StudentID existed");
         else alert("Updated!");
         return response.text();
     })
     .then(result => {
-      console.log('ok');
         uploadData();
         onHandleClose();
         setStudentID('');
         
     })
     .catch(error => {
-        console.log('error', error)
         alert("An error occur");
     });
   }

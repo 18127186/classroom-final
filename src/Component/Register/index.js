@@ -59,11 +59,9 @@ const Register = () => {
             fetch(process.env.REACT_APP_API_URL + "accounts", requestOptions)
             .then(response => response.text())
             .then(result => {
-                console.log(result);
                 alert("Register successfully, you can login now!");
             })
             .catch(error => {
-                console.log('error', error);
                 alert("Register fail!")
             });
         }
