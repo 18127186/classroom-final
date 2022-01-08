@@ -6,9 +6,9 @@ import { Card} from 'react-bootstrap';
 import './index.css';
 import AsyncDownloadButton from '../AsyncDownloadButton';
 import * as XLSX from 'xlsx';
-import { data } from 'jquery';
 
 const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) => {
+    const params = useParams();
     const [show, setShow] = useState(false);
     const [uploadModalShow, setUploadModalShow] = useState(false);
     const [reviewModalShow, setReviewModalShow] = useState(false);
@@ -21,7 +21,7 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
     const [month, setMonth] = useState("1");
     const [year, setYear] = useState("2020");
     const [fileData, setFileData] = useState("student");
-    const params = useParams();
+
 
     const [topicUpdate, setTopicUpdate] = useState(dataAssignment.topic);
     const [gradeUpdate, setGradeUpdate] = useState(dataAssignment.grade);
@@ -265,8 +265,8 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
             <Card.Text> {description} </Card.Text> 
             {role === 'student' ? 
             <Card.Text> Point: {point}</Card.Text> :
-            <Card.Text> Point: {grade} / 10</Card.Text> } 
-            <Card.Text> {dataAssignment.deadline} </Card.Text>   
+            <Card.Text> Point: {grade} / 10</Card.Text> }
+            <Card.Text> {dataAssignment.deadline} </Card.Text> 
         </Card.Body>
         <Card.Footer className="text-center">
             <div className="footer-createAssignBtn text-center" hidden={!(role === 'teacher')}>

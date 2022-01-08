@@ -16,6 +16,8 @@ import ListReview from './Component/ListReview';
 import DetailReview from './Component/Review';
 import ManageClassAdminPage from './Component/ManageClassAdminPage';
 import AdminAccountPage from './Component/AdminAccountPage';
+import DetailAssignment from './Component/DetailAssignment';
+
 function App() {
   const [isLogin, setIsLogin] = useState(localStorage.getItem("token") != null);
   const [reloadTrigger, setReloadTrigger] = React.useState(false);
@@ -41,6 +43,7 @@ function App() {
       <Route path='/register' element={<Register/>}/>
       <Route path='/classes/detail/:id' element={<DetailClass/>}/>
       <Route path='/classes/detail/:id/assignment' element={<ListAssignment/>}/>
+      <Route path='/classes/detail/:id/assignment/:idAss' element={<DetailAssignment/>}/>
       <Route path='/classes/members/:id' element={<MembersList/>}/>
       <Route path='/classes/acceptlink/:tokenlink' element={<AcceptLink/>}/>
       <Route path='/profile/:id' element={<Profile/>}/>
