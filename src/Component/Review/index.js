@@ -285,6 +285,9 @@ const DetailReview = () => {
                                     max: 10, min: 0 
                                 }
                             }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                     />
                     : 
                     <Card.Text> Update grade: {update_grade} </Card.Text>}
