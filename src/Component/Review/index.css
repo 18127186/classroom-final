@@ -11,3 +11,13 @@
 .viewlink {
     color: black;
 }
+
+.cmtLabel {
+    margin-left: 4%;
+    font-weight: 700;
+    /* sx={{ ml: 2, fontWeight: 700 }} */
+}
+
+.inputGrade {
+    max-width: 20%;
+}

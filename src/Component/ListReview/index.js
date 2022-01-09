@@ -49,7 +49,7 @@ const ListReview = () => {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_API_URL + "reviews/" + params.id + "/" + localStorage.getItem("studentID"), requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "reviews/getReviews/" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
             if (result) {
@@ -101,7 +101,7 @@ const ListReview = () => {
                     List Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
-                    Grades Structure
+                    Grades Management
                 </NavLink>
                 <NavLink className="nav-link" to='#'>
                     Grade Reviews

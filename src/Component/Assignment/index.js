@@ -230,7 +230,6 @@ const Assignment = ({dataAssignment, onDeleteSuccess, onUpdateSuccess, role}) =>
         
         var raw = JSON.stringify({
             "assign_id": dataAssignment.id,
-            "student_id": localStorage.getItem("studentID"),
             "expect_grade": expectGrade,
             "explanation": explanation,
             "current_grade": point,

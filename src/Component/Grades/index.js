@@ -412,7 +412,7 @@ const Grades = () => {
                         List Assignment
                     </NavLink>
                     <NavLink className="nav-link" to='#' hidden={!(role === 'teacher')}>
-                        Grades Structure
+                        Grades Management
                     </NavLink>
                     <NavLink className="nav-link" to={gradeReviews}>
                         Grade Reviews

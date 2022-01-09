@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {  Navbar, Card } from 'react-bootstrap';
 import { NavLink, useParams, Link } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import SendIcon from '@mui/icons-material/Send';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import PersonIcon from '@mui/icons-material/Person';
+import TextField from '@mui/material/TextField';
 import './index.css'
 
 const DetailReview = () => {
@@ -9,6 +21,7 @@ const DetailReview = () => {
     const detailURL = '/classes/detail/' + params.idClass;
     const memberURL = '/classes/members/' + params.idClass;
     const gradesStructure = '/grades/' + params.idClass;
+    const gradeReviews = '/classes/grade-reviews/' + params.idClass;
 
     const [role, setRole] = useState();
     const [data, setData] = useState({
@@ -21,7 +34,10 @@ const DetailReview = () => {
         expect_grade: null,
         explanation: null
     });
-    const [update_grade, setUpdateGrade] = useState();
+    const [update_grade, setUpdateGrade] = useState('');
+    const [listCmt, setListCmt] = useState([]);
+    const [cmtContent, setCmtContent] = useState('');
+    const [name, setName] = useState('');
     
     const getRole = () => {
         var myHeaders = new Headers();
@@ -58,7 +74,7 @@ const DetailReview = () => {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_API_URL + "reviews/detail/" + params.idClass + "/" + params.idReview, requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "reviews/detail/" + params.idReview, requestOptions)
         .then(response => response.json())
         .then(result => {
             if (result) {
@@ -80,9 +96,74 @@ const DetailReview = () => {
         })
     }
 
+    const getCmts = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "reviews/comments/" + params.idReview, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              setListCmt(result);
+          })
+          .catch(error => console.log('error', error));
+    }
+
+    const RenderCmts = (id, name, content) => {
+        return (
+            <ListItem key={id} alignItems="flex-start">
+                <ListItemAvatar>
+                    <Avatar><PersonIcon/></Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                primary={
+                    <h6>{name}</h6>
+                } 
+                secondary={
+                    <React.Fragment>
+                    <Typography
+                        sx={{ display: 'inline' }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                    >
+                        {content}
+                    </Typography>
+                    </React.Fragment>
+                }
+                />
+            </ListItem>
+        )
+    }
+
+    const getUserInfo = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "accounts/detail/" + localStorage.getItem("userId"), requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              setName(result.account[0].name);
+          })
+          .catch(error => console.log('error', error));
+    }
+
     useEffect(() => {
         getRole();
-        getData();   
+        getData();
+        getCmts();
+        getUserInfo();   
     }, [params.id]);
 
     const updateGrade = () => {
@@ -92,7 +173,8 @@ const DetailReview = () => {
 
         var raw = JSON.stringify({
             "update_grade": update_grade,
-            "studentId": data.student_id
+            "studentId": data.student_id,
+            "assignment_id": data.assign_id
         });
 
         var requestOptions = {
@@ -112,7 +194,42 @@ const DetailReview = () => {
         });
     }
 
+    const addCmt = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify({
+          "review_id": params.idReview,
+          "content": cmtContent
+        });
+        var newCmt = {
+            id: listCmt.at(-1).id + 1,
+            name: name,
+            content: cmtContent
+        }
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "reviews/addCmt", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            console.log("Cmt successfully")
+            var newList = listCmt.slice();
+            newList.push(newCmt);
+            setListCmt(newList);
+            setCmtContent('');
+            })
+          .catch(error => console.log('error', error));
+    }
+
     const onChangeHandler = (e) => setUpdateGrade(e.target.value);
+    const onCmtChangeHandler = (e) => setCmtContent(e.target.value);
 
     return (
         <div>
@@ -131,9 +248,9 @@ const DetailReview = () => {
                     List Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
-                    Grades Structure
+                    Grades Management
                 </NavLink>
-                <NavLink className="nav-link" to='#'>
+                <NavLink className="nav-link" to={gradeReviews}>
                     Grade Reviews
                 </NavLink>
                 </Navbar.Collapse>
@@ -147,26 +264,66 @@ const DetailReview = () => {
                     <Card.Text> Current grade: {data.current_grade} </Card.Text>
                     <Card.Text> Expect grade: {data.expect_grade} </Card.Text>
                     <Card.Text> Explanation: {data.explanation} </Card.Text>
+                    
                     {role === 'teacher' ? 
-                    <Card.Text> Update grade: 
-                        <input type="number"
-                            defaultValue={update_grade}
-                            onChange={onChangeHandler}>
-                        </input> </Card.Text>
+                    // <Card.Text className="head-center">
+                    //     {/* <input className="inputGrade" type="number"
+                    //         defaultValue={update_grade}
+                    //         onChange={onChangeHandler}>
+                    //     </input>  */}
+                        
+                    // </Card.Text>
+                    <TextField
+                            id="outlined-number"
+                            label="Update grade"
+                            type="number"
+                            className="inputGrade "
+                            value={update_grade}
+                            onChange={onChangeHandler}
+                            InputProps={{
+                                inputProps: { 
+                                    max: 10, min: 0 
+                                }
+                            }}
+                    />
                     : 
                     <Card.Text> Update grade: {update_grade} </Card.Text>}
                     
 
                 </Card.Body>
-                <Card.Footer className="text-center">
+                <Card.Footer className="text-center" hidden={!(role === 'teacher')}>
                     <div className="footer-viewBtn text-center">
                         <button className="btn btn-success btnView" 
-                        onClick={updateGrade}
-                        hidden={!(role === 'teacher')}>
+                        onClick={updateGrade}>
                         Confirm
                         </button>
                     </div>
                 </Card.Footer>
+                <hr/>
+                <div className="cmtLabel">Comments</div>
+                {/* <Typography className="" >Comments</Typography> */}
+                <Card.Body>
+                    {listCmt.map((ele) => RenderCmts(ele.id, ele.name, ele.content))}
+                    
+                    <hr/>
+                    <Box sx={{ '& > :not(style)': { m: 1 } }}>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <Input
+                            id="input-with-icon-adornment"
+                            fullWidth
+                            placeholder="Add a comment"
+                            onChange={onCmtChangeHandler}
+                            value={cmtContent}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <SendIcon type="button" onClick={addCmt} edge="end"/>
+                                </InputAdornment>
+                            }
+                            />
+                        </Box>
+                    </Box>
+                </Card.Body>
 
             </Card>
             
