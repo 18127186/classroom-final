@@ -67,7 +67,7 @@ const Profile = () => {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_API_URL + "accounts/detail" + params.id, requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/detail/" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
             setStudentID(result.account[0].studentID);
