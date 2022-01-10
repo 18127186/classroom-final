@@ -409,7 +409,7 @@ const Grades = () => {
                         Member
                     </NavLink>
                     <NavLink className="nav-link" to={listAssignmentURL}>
-                        List Assignment
+                        Assignment
                     </NavLink>
                     <NavLink className="nav-link" to='#' hidden={!(role === 'teacher')}>
                         Grades Management

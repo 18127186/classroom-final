@@ -318,9 +318,30 @@ const DetailAssignment = () => {
                 onHandleReviewModalClose();
             })
             .catch(error => {
-                alert("Fail!");
+                alert("Request fail!");
                 onHandleReviewModalClose();
             });
+    }
+
+    const onHandleMarkFin = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        myHeaders.append("Content-Type", "application/json");
+        
+        var requestOptions = {
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "/markFinalAss/" + params.id + "/" + params.idAss, requestOptions)
+            .then(response => { 
+                if (response.ok) {
+                    alert("Mark success!");
+                    setFinished(1);
+                } else {
+                    alert("Mark fail!");
+                }
+            }) 
     }
 
     // url
@@ -344,7 +365,7 @@ const DetailAssignment = () => {
                     Member
                 </NavLink>
                 <NavLink className="nav-link" to={listAssignmentURL}>
-                    List Assignment
+                    Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                     Grades Management
@@ -384,39 +405,20 @@ const DetailAssignment = () => {
                             <hr/>
                     </CardContent>
                     <CardActions sx={{mt:0, mb:1, ml:1}} hidden={role !== 'teacher'}>
-                        <Button size="small" variant="contained" color="success" onClick={onHandleModalShow}>Update</Button>
-                        <Button size="small" variant="contained" color="success" onClick={deleteAssignment}>Delete</Button>
+                        <Button size="small" variant="contained" color="success" disabled={finished == 1} onClick={onHandleModalShow}>Update</Button>
+                        <Button size="small" variant="contained" color="success" disabled={finished == 1} onClick={deleteAssignment}>Delete</Button>
                         <Button size="small" variant="contained" color="success">
-                            <AsyncDownloadButton/>
+                            <AsyncDownloadButton />
                         </Button>
-                        <Button size="small" variant="contained" color="success" onClick={onHandleUploadModalShow}>Upload grades</Button>
+                        <Button size="small" variant="contained" color="success" disabled={finished == 1} onClick={onHandleUploadModalShow}>Upload grades</Button>
                         <Button size="small" variant="contained" color="success" sx={{ml:1}} href="/Template/grades_assignment_template.xlsx">Donwload Template</Button>
+                        <Button size="small" variant="contained" color="success" disabled={finished == 1} onClick={onHandleMarkFin}>Mark as Finish</Button>
                     </CardActions>
-                    <CardActions sx={{mt:0, mb:1, ml:1}} hidden={role !== 'student' || finished !== 1}>
-                        <Button size="small" variant="contained" color="success" onClick={onHandleReviewModalShow}>Request a grade review</Button>
+                    <CardActions sx={{mt:0, mb:1, ml:1}} hidden={role !== 'student'}>
+                        <Button size="small" variant="contained" color="success" disabled={finished == 0} onClick={onHandleReviewModalShow}>Request a grade review</Button>
                     </CardActions>
                 </Card>
             </Box>
-
-                    {/* <Modal show={uploadModalShow} onHide={onHandleUploadModalClose}>
-            <Modal.Header closeButton>
-            <Modal.Title> Upload Student List</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form.Group className="mb-3">
-                    <Form.Label> File </Form.Label>
-                    <Form.Control type="file" 
-                            onChange={fileOnChangeHandler}/>
-                </Form.Group>
-
-            </Modal.Body>
-            <Modal.Footer>
-                <div className="footer-createAssignBtn text-center">
-                    <button className="btn btn-dark btnCreateAssign" onClick={uploadFile}> Upload </button>
-                    <button className="btn btn-success addClassButton" onClick={onHandleUploadModalClose}> Close </button>
-                </div>
-            </Modal.Footer>
-        </Modal> */}
 
         <Modal show={show} onHide={onHandleModalClose} dialogClassName="modal-70w">
             <Modal.Header closeButton>

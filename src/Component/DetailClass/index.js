@@ -75,7 +75,7 @@ const DetailClass = () => {
             if (result) {
                 setInviteLinkTeacher(result.teacher_iToken);
                 setInviteLinkStudent(result.student_iToken);
-                setInviteCodeTeacher(result.student_iCode);
+                setInviteCodeTeacher(result.teacher_iCode);
                 setInviteCodeStudent(result.student_iCode);
             }
         })
@@ -229,7 +229,7 @@ const DetailClass = () => {
                         Member
                     </NavLink>
                     <NavLink className="nav-link" to={listAssignmentURL}>
-                        List Assignment
+                        Assignment
                     </NavLink>
                     <NavLink className="nav-link" to={gradesStructure} hidden={!(userRole === 'teacher')}>
                         Grades Management
