@@ -30,11 +30,11 @@ const DetailReview = () => {
         topic: null,
         student_id: null,
         current_grade: null,
-        done: null,
         expect_grade: null,
         explanation: null
     });
     const [update_grade, setUpdateGrade] = useState('');
+    const [done, setDone] = useState(0);
     const [listCmt, setListCmt] = useState([]);
     const [cmtContent, setCmtContent] = useState('');
     const [name, setName] = useState('');
@@ -84,10 +84,12 @@ const DetailReview = () => {
                     topic: result[0].topic,
                     student_id: result[0].student_id,
                     current_grade: result[0].current_grade,
-                    done: result[0].done,
                     expect_grade: result[0].expect_grade,
                     explanation: result[0].explanation
                 });
+                if (result[0].done) {
+                    setDone(result[0].done)
+                }
                 if (result[0].update_grade) {
                     setUpdateGrade(result[0].update_grade);
                 }
@@ -221,11 +223,35 @@ const DetailReview = () => {
         fetch(process.env.REACT_APP_API_URL + "reviews/addCmt", requestOptions)
           .then(response => response.json())
           .then(result => {
-            console.log("Cmt successfully")
             var newList = listCmt.slice();
             newList.push(newCmt);
             setListCmt(newList);
             setCmtContent('');
+            })
+          .catch(error => console.log('error', error));
+    }
+
+    const markFinal = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify({
+          "id_review": params.idReview,
+        });
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        
+        fetch(process.env.REACT_APP_API_URL + "reviews/mark-final", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            alert("Mark final done!")
+            setDone(1);
             })
           .catch(error => console.log('error', error));
     }
@@ -258,7 +284,7 @@ const DetailReview = () => {
                 </Navbar.Collapse>
             </Navbar>
             <Card className="review mx-auto">
-                <Card.Header as= "h2" className="head-center"> Grade Review {data.id} </Card.Header>
+                <Card.Header as= "h2" className="head-center"> Grade Review {data.id} {done === 1 ? "(Finalized)" : ""} </Card.Header>
                 <Card.Body>            
                     {/* <Card.Title> Abc </Card.Title> */}
                     <Card.Text> Grade composition: {data.topic} </Card.Text> 
@@ -268,6 +294,7 @@ const DetailReview = () => {
                     <Card.Text> Explanation: {data.explanation} </Card.Text>
                     
                     {role === 'teacher' ? 
+                    <div>
                     <TextField
                             id="outlined-number"
                             label="Update grade"
@@ -284,16 +311,25 @@ const DetailReview = () => {
                                 shrink: true,
                             }}
                     />
+                    <button className="btn btn-success btnUpdate"
+                        hidden={done === 1}
+                        onClick={updateGrade}>
+                        Update grade
+                    </button>
+                    </div>
                     : 
                     <Card.Text> Update grade: {update_grade ? update_grade : "--"} </Card.Text>}
                     
 
                 </Card.Body>
-                <Card.Footer className="text-center" hidden={!(role === 'teacher')}>
+                <Card.Footer className="text-center" hidden={!(role === 'teacher') || done === 1}>
+                    <div className="footer-viewBtn text-center">
+                        
+                    </div>
                     <div className="footer-viewBtn text-center">
                         <button className="btn btn-success btnView" 
-                        onClick={updateGrade}>
-                        Confirm
+                        onClick={markFinal}>
+                        Mark as final
                         </button>
                     </div>
                 </Card.Footer>

@@ -54,6 +54,7 @@ const ListReview = () => {
         .then(result => {
             if (result) {
                 setListReview(result);
+                console.log(result);
             }
         })
         .catch(error => {
@@ -61,11 +62,11 @@ const ListReview = () => {
         })
     }, [params.id]);
 
-    const RenderAReview = (id, student_id, assignment) => {
+    const RenderAReview = (id, student_id, assignment, done) => {
         const detailURL = '/classes/grade-reviews/detail/' + params.id + '/' + id
         return(
             <Card key={id} className="review mx-auto">
-                <Card.Header as= "h2" className="head-center"> Grade Review {id} </Card.Header>
+                <Card.Header as= "h2" className="head-center"> Grade Review {id} {done === 1 ? "(Finalized)" : ""}</Card.Header>
                 <Card.Body>            
                     {/* <Card.Title> Abc </Card.Title> */}
                     <Card.Text> Grade composition: {assignment} </Card.Text> 
@@ -110,7 +111,7 @@ const ListReview = () => {
                 </Navbar.Collapse>
             </Navbar>
             {listReview.map((row) => (
-                RenderAReview(row.id, row.student_id, row.topic)
+                RenderAReview(row.id, row.student_id, row.topic, row.done)
             ))}
             
         </div>

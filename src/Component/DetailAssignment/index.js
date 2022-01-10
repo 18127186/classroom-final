@@ -392,7 +392,7 @@ const DetailAssignment = () => {
                         <Button size="small" variant="contained" color="success" onClick={onHandleUploadModalShow}>Upload grades</Button>
                         <Button size="small" variant="contained" color="success" sx={{ml:1}} href="/Template/grades_assignment_template.xlsx">Donwload Template</Button>
                     </CardActions>
-                    <CardActions sx={{mt:0, mb:1, ml:1}} hidden={role !== 'student'}>
+                    <CardActions sx={{mt:0, mb:1, ml:1}} hidden={role !== 'student' || finished !== 1}>
                         <Button size="small" variant="contained" color="success" onClick={onHandleReviewModalShow}>Request a grade review</Button>
                     </CardActions>
                 </Card>
