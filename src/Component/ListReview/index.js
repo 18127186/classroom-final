@@ -73,9 +73,10 @@ const ListReview = () => {
                 </Card.Body>
                 <Card.Footer className="text-center">
                     <div className="footer-viewBtn text-center">
-                        <button className="btn btn-danger btnView">
-                        <Link className="viewlink" to={detailURL}> View </Link>
-                        </button>
+                        
+                        <Link to={detailURL}> 
+                        <button className="btn btn-success btnView">View</button>
+                        </Link>
                     </div>
                 </Card.Footer>
 

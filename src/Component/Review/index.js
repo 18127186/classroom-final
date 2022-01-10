@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {  Navbar, Card } from 'react-bootstrap';
-import { NavLink, useParams, Link } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -34,7 +34,7 @@ const DetailReview = () => {
         expect_grade: null,
         explanation: null
     });
-    const [update_grade, setUpdateGrade] = useState('');
+    const [update_grade, setUpdateGrade] = useState();
     const [listCmt, setListCmt] = useState([]);
     const [cmtContent, setCmtContent] = useState('');
     const [name, setName] = useState('');
@@ -267,10 +267,10 @@ const DetailReview = () => {
                     
                     {role === 'teacher' ? 
                     // <Card.Text className="head-center">
-                    //     {/* <input className="inputGrade" type="number"
+                    //     <input className="inputGrade" type="number"
                     //         defaultValue={update_grade}
                     //         onChange={onChangeHandler}>
-                    //     </input>  */}
+                    //     </input> 
                         
                     // </Card.Text>
                     <TextField
@@ -278,11 +278,15 @@ const DetailReview = () => {
                             label="Update grade"
                             type="number"
                             className="inputGrade "
-                            value={update_grade}
+                            // value={update_grade}
+                            // defaultValue={update_grade}
                             onChange={onChangeHandler}
+                            //inputRef={(input) => setUpdateGrade(input) }
                             InputProps={{
                                 inputProps: { 
-                                    max: 10, min: 0 
+                                    max: 10, min: 0,
+                                    defaultValue: {update_grade},
+                                    value: {update_grade}
                                 }
                             }}
                             InputLabelProps={{
@@ -290,7 +294,7 @@ const DetailReview = () => {
                             }}
                     />
                     : 
-                    <Card.Text> Update grade: {update_grade} </Card.Text>}
+                    <Card.Text> Update grade: {update_grade ? update_grade : "--"} </Card.Text>}
                     
 
                 </Card.Body>
