@@ -110,10 +110,11 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
     .then(response => response.json())
     .then(result => {
       if (result) {
-        alert(result);
+        alert("Activated!");
         setCode("");
         setServerCode("");
         setMail("");
+        onHandleActiveModalClose();
       }
     })
     .catch(error => {
@@ -233,7 +234,7 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {brandName}
           </Typography>
-          {active? <div></div> : <Button className="btn btn-success" style={{ backgroundColor: 'blue', color: 'white'}} onClick={onHandleActiveModalShow}> Active Mail </Button> }
+          {(active != 'null')? <div></div> : <Button className="btn btn-success" style={{ backgroundColor: 'blue', color: 'white'}} onClick={onHandleActiveModalShow}> Active Mail </Button> }
           {!isAdmin ? <div>  
             <IconButton
                 size="large"

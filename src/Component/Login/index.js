@@ -152,6 +152,8 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                     
                     onLoginSuccess();
                 }
+
+                console.log(localStorage.getItem("mail"));
             })
             .catch(error => {
                 alert("Incorrect username or password!");
