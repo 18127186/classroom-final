@@ -46,8 +46,8 @@ const Assignment = ({dataAssignment, role}) => {
         <Card.Body>            
             {/* <Card.Title> Abc </Card.Title> */}
             <Card.Text> {description} </Card.Text> 
-            {role === 'student' ? 
-            <Card.Text> Point: {point}</Card.Text> :
+            {role === 'student' ?
+            <Card.Text> Point: {dataAssignment.finished === 1 ? point : "--"}</Card.Text> :
             <Card.Text> Point: {grade} / 10</Card.Text> }
             <Card.Text> {dataAssignment.deadline} </Card.Text> 
         </Card.Body>

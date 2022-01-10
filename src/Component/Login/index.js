@@ -11,6 +11,7 @@ import AdminPage from "../AdminPage";
 const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
+    //const [showDialog, setShowDialog] = useState(false);
     const [isLogin, setIsLogin] = useState(localStorage.getItem("token") != null)
 
     const paperStyle = {
@@ -220,6 +221,9 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                         <Link to="/register"> Sign Up
                         </Link>
                     </Typography>
+                    <Typography type="button" style={{color: "blue"}}>
+                        Forgot password?
+                    </Typography>
                     <FacebookLogin
                         appId="842222179779996"
                         fields="name,picture,email"
@@ -236,7 +240,40 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                         className="btnGoogle"
                     />
                 </Paper>
+                {/* <Modal show={showDialog} onHide={onHandleClose}>
+                        <Modal.Header closeButton>
+                        <Modal.Title>Forgot password</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <form onSubmit={onSubmitHandler}>
+                                <strong style={{ fontSize: 17 }}> Send invitation by email </strong>
+                                <div className='d-flex mt-2'>
+                                    <FormControl style={{width: "20%", margin: 5, marginTop: 12}}>
+                                        <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                                        <Select sx={{ height: "40px"}}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={roleInvite}
+                                            label="Role"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem value={"student"}>Student</MenuItem>
+                                            <MenuItem value={"teacher"}>Teacher</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                        <div className='pt-2' style={{ flexGrow: 1, margin: 5 }} >
+                                            <input type="text" style={{ height:40 }} name="name" className="form-control" placeholder="Email..." onChange={onChangeHandler} />
+                                        </div>
+                                        <div className='pt-2' style={{ margin: 5 }} >
+                                            <button type="submit" className="btn btn-success"> <SendIcon/> </button>
+                                        </div>
+                                </div>
+                            </form>
+                        </Modal.Body>
+                        
+                    </Modal> */}
             </Grid>
+            
             }
             
             </div>
