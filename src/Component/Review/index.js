@@ -34,7 +34,7 @@ const DetailReview = () => {
         expect_grade: null,
         explanation: null
     });
-    const [update_grade, setUpdateGrade] = useState();
+    const [update_grade, setUpdateGrade] = useState('');
     const [listCmt, setListCmt] = useState([]);
     const [cmtContent, setCmtContent] = useState('');
     const [name, setName] = useState('');
@@ -88,7 +88,9 @@ const DetailReview = () => {
                     expect_grade: result[0].expect_grade,
                     explanation: result[0].explanation
                 });
-                setUpdateGrade(result[0].update_grade);
+                if (result[0].update_grade) {
+                    setUpdateGrade(result[0].update_grade);
+                }
             }
         })
         .catch(error => {
@@ -266,27 +268,16 @@ const DetailReview = () => {
                     <Card.Text> Explanation: {data.explanation} </Card.Text>
                     
                     {role === 'teacher' ? 
-                    // <Card.Text className="head-center">
-                    //     <input className="inputGrade" type="number"
-                    //         defaultValue={update_grade}
-                    //         onChange={onChangeHandler}>
-                    //     </input> 
-                        
-                    // </Card.Text>
                     <TextField
                             id="outlined-number"
                             label="Update grade"
                             type="number"
                             className="inputGrade "
-                            // value={update_grade}
-                            // defaultValue={update_grade}
+                            value={update_grade}
                             onChange={onChangeHandler}
-                            //inputRef={(input) => setUpdateGrade(input) }
                             InputProps={{
                                 inputProps: { 
                                     max: 10, min: 0,
-                                    defaultValue: {update_grade},
-                                    value: {update_grade}
                                 }
                             }}
                             InputLabelProps={{
