@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Card} from 'react-bootstrap';
 import './index.css';
 
-const Assignment = ({dataAssignment, role}) => {
+const Assignment = ({dataAssignment, role, getTotal}) => {
     const params = useParams();
 
     const [topic] = useState(dataAssignment.topic);
@@ -29,6 +29,9 @@ const Assignment = ({dataAssignment, role}) => {
             {
                 if (result.length > 0) {
                     setPoint(result[0].grade)
+                    if (dataAssignment.finished === 1) {
+                        getTotal((result[0].grade * dataAssignment.grade /10))
+                    }
                 }
             })
         .catch(error => console.log('error', error));

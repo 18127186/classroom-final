@@ -27,6 +27,7 @@ const ListAssignment = () => {
     const [year, setYear] = useState("2020");
 
     const [loadFirst, setLoadFirst] = useState(true);
+    const [totalGrade, setTotalGrade] = useState(0);
 
     const topicOnChangeHandler = (e) => setTopic(e.target.value);
     const gradeOnChangeHandler = (e) => setGrade(e.target.value);
@@ -102,11 +103,10 @@ const ListAssignment = () => {
         let list = [];
         arrayAssignment.map((ele) => {
             list.push(<Assignment 
-                key={ele.id} 
-                onDeleteSuccess={() => onDeleteSuccess(ele.id)} 
-                onUpdateSuccess={() => onUpdateSuccess(ele.id)} 
+                key={ele.id}
                 dataAssignment={ele}
-                role={role}/>
+                role={role}
+                getTotal={(grade) => TotalGrade(grade)}/>
             )}
         )
         return list;
@@ -183,6 +183,11 @@ const ListAssignment = () => {
         setLoadFirst(false);
     }
 
+    const TotalGrade = (grade) => {
+        var tmp = totalGrade + grade;
+        setTotalGrade(tmp);
+    }
+
     var tmpList = arrayAssignment.slice();
 
     return (
@@ -214,6 +219,7 @@ const ListAssignment = () => {
             </Navbar>
             {role !== 'teacher' ? 
             <div className="list-assignment">
+                <h5>Total Grade: {totalGrade}</h5>
             {getListAssignment()}
             </div> 
             
