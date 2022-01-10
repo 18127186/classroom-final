@@ -24,7 +24,7 @@ const AsyncDownloadButton = (assign) => {
     const downloadAssignmentGrades = () => {
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
-
+        console.log('here');
         let requestOptions = {
             method: 'GET',
             headers: myHeaders,
@@ -35,8 +35,8 @@ const AsyncDownloadButton = (assign) => {
         .then(response => response.json())
         .then(result => {
             if (result) {
+                console.log('here');
                 setDataForDownload(result);
-
                 setDownloadReady(true);
             }
         })
@@ -46,7 +46,7 @@ const AsyncDownloadButton = (assign) => {
     }
 
     return ( <div> 
-        <input type ="button" value="Download assignment grades" onClick={downloadAssignmentGrades}/>
+        <div onClick={downloadAssignmentGrades}> Download grades </div>
         <CSVLink headers={headers}
                 data={dataForDownload}
                 filename="AssignmentGrades.csv"

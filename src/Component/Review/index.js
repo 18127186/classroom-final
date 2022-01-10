@@ -201,8 +201,10 @@ const DetailReview = () => {
         
         var raw = JSON.stringify({
           "review_id": params.idReview,
-          "content": cmtContent
+          "content": cmtContent,
+          "role": role
         });
+
         var newCmt = {
             id: listCmt.at(-1).id + 1,
             name: name,
@@ -245,7 +247,7 @@ const DetailReview = () => {
                     Member
                 </NavLink>
                 <NavLink className="nav-link" to={listAssignmentURL}>
-                    List Assignment
+                    Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                     Grades Management

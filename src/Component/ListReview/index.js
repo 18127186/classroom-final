@@ -99,7 +99,7 @@ const ListReview = () => {
                     Member
                 </NavLink>
                 <NavLink className="nav-link" to={listAssignmentURL}>
-                    List Assignment
+                    Assignment
                 </NavLink>
                 <NavLink className="nav-link" to={gradesStructure} hidden={!(role === 'teacher')}>
                     Grades Management
