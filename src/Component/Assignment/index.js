@@ -55,7 +55,7 @@ const Assignment = ({dataAssignment, role, getTotal}) => {
             <Card.Text> {dataAssignment.deadline} </Card.Text> 
         </Card.Body>
         <Card.Footer className="text-center">
-            <div className="footer-createAssignBtn text-center" >
+            <div className="footer-createAssignBtn text-center">
                 <Link to={detailURL}>
                 <button className="btn btn-success btnView"> View </button>
                 </Link>

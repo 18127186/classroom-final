@@ -63,6 +63,7 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
                 localStorage.setItem("studentID", result.user.studentID);
+                localStorage.setItem("mail", result.user.email);
                 setIsLogin(true);
                 onLoginSuccess();
             })
@@ -97,6 +98,7 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("userId", result.user.id);
                 localStorage.setItem("studentID", result.user.studentID);
+                localStorage.setItem("mail", result.user.email);
                 setIsLogin(true);
                 onLoginSuccess();
             })
@@ -130,27 +132,28 @@ const Login = ({onLoginSuccess, setTrigger, reloadTrigger}) => {
                 throw Error(response.status);
             })
             .then(result => {
+                
                 if (result.message) {
                     alert("Account Banned");
                 }
                 else if (result.type === 'admin') {
-
-                    setIsAdmin(true);
                     localStorage.setItem("isAdmin", true);
                     localStorage.setItem("token", result.token);
                     localStorage.setItem("userId", result.user.id);
-                    setIsLogin(true);
-                    
-                    onLoginSuccess();
+                    localStorage.setItem("mail", result.user.email);
+                    console.log(localStorage.getItem("mail"));                   
                 }
                 else {
                     localStorage.setItem("token", result.token);
                     localStorage.setItem("userId", result.user.id);
                     localStorage.setItem("studentID", result.user.studentID);
+                    localStorage.setItem("mail", result.user.email);
                     setIsLogin(true);
                     
                     onLoginSuccess();
                 }
+
+                console.log(localStorage.getItem("mail"));
             })
             .catch(error => {
                 alert("Incorrect username or password!");

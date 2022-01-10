@@ -22,6 +22,11 @@ const Profile = () => {
     const saveBtnOnClick = (e) => {
         e.preventDefault();
 
+        if (!studentID || studentID.length < 8) {
+            alert("Student ID must be 8 digital!");
+            return;
+        }
+
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
         myHeaders.append("Content-Type", "application/json");
@@ -67,7 +72,7 @@ const Profile = () => {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_API_URL + "accounts/detail" + params.id, requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "accounts/detail/" + params.id, requestOptions)
         .then(response => response.json())
         .then(result => {
             setStudentID(result.account[0].studentID);
@@ -85,7 +90,7 @@ const Profile = () => {
                 <Form>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label> Student ID </Form.Label>
-                        <Form.Control type="text" value={studentID} disabled={!isOwner} onChange={studentIDOnChangeHandler} />
+                        <Form.Control type="number" value={studentID} disabled={!isOwner} onChange={studentIDOnChangeHandler} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">

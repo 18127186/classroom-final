@@ -314,7 +314,7 @@ const DetailAssignment = () => {
         fetch(process.env.REACT_APP_API_URL + "reviews/create", requestOptions)
             .then(response => response.text())
             .then(result => {
-                alert("Requested!");
+                alert(result.message());
                 onHandleReviewModalClose();
             })
             .catch(error => {
@@ -378,7 +378,7 @@ const DetailAssignment = () => {
         
         <Stack alignItems="center">
             <Box sx={{ border: "1px solid #5c5850", borderRadius:2, p:0, margin: 2  }}> 
-                <Card variant="outlined" sx={{border: "1px solid #5c5850 !important"}}>
+                <Card variant="outlined" style={{border: "1px solid #5c5850 !important", minWidth: '800px'}}>
                     <CardContent sx={{ mb:0 }}>
                         <Typography gutterBottom variant="h3" color="orangered">
                             {topic}

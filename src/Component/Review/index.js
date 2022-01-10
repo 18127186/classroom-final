@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import PersonIcon from '@mui/icons-material/Person';
 import TextField from '@mui/material/TextField';
 import './index.css'
+import { param } from "jquery";
 
 const DetailReview = () => {
     const params = useParams();
@@ -240,6 +241,7 @@ const DetailReview = () => {
         
         var raw = JSON.stringify({
           "id_review": params.idReview,
+          "studentId": data.student_id,
         });
         
         var requestOptions = {
@@ -249,7 +251,7 @@ const DetailReview = () => {
           redirect: 'follow'
         };
         
-        fetch(process.env.REACT_APP_API_URL + "reviews/mark-final", requestOptions)
+        fetch(process.env.REACT_APP_API_URL + "reviews" + params.idClass + "/markFinal", requestOptions)
           .then(response => response.json())
           .then(result => {
             alert("Mark final done!")

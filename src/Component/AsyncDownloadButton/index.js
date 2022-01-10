@@ -24,7 +24,7 @@ const AsyncDownloadButton = (assign) => {
     const downloadAssignmentGrades = () => {
         let myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
-        console.log('here');
+
         let requestOptions = {
             method: 'GET',
             headers: myHeaders,
@@ -35,7 +35,6 @@ const AsyncDownloadButton = (assign) => {
         .then(response => response.json())
         .then(result => {
             if (result) {
-                console.log('here');
                 setDataForDownload(result);
                 setDownloadReady(true);
             }

@@ -15,14 +15,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import './index.css'
 import Notification from '../Notification';
 import { Card } from "@material-ui/core";
+import { Button } from "@mui/material";
 
 export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
 	const [name, setName] = React.useState("");
+  const [mail, setMail] = React.useState("");
+  const [code, setCode] = React.useState("");
+  const [serverCode, setServerCode] = React.useState("");
   const [description, setDescription] = React.useState("");
 	const [show, setShow] = React.useState(false);
+  const [activeModelShow, setActiveModelShow] = React.useState(false);
   const [notiData, setNotiData] = React.useState([]); 
   const [isHiddenNotification, setIsHiddenNotification] = React.useState(true);
   const [url] = React.useState("/profile/" + localStorage.getItem("userId"));
+  const [active] = React.useState(localStorage.getItem("mail"));
+  const [enterMailStep, setEnterMailStep] = React.useState(true)
 
 	let navigate = useNavigate();
   let location = useLocation();
@@ -34,6 +41,87 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
     }
   }
 
+  const getVerifyCode = async(e) => {
+		e.preventDefault();
+
+    if (!mail || mail == "") {
+      alert("You must enter your email address!");
+      return;
+    }
+		var myHeaders = new Headers();
+		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+		myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "mail": mail
+    });
+
+		var requestOptions = {
+				method: 'POST',
+        body: raw,
+				headers: myHeaders,
+				redirect: 'follow'
+		};
+
+		await fetch(process.env.REACT_APP_API_URL + "sendEmail/getVerifyCode", requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      if (result) {
+        console.log(result);
+        setServerCode(result);
+        setEnterMailStep(false);
+        setCode("");
+      }
+    })
+    .catch(error => {
+        alert(error);
+    })
+  };
+
+  const backStep = () => {
+    setEnterMailStep(true);
+    setMail("");
+  } 
+
+  const verifyActiveCode = async(e) => {
+		e.preventDefault();
+
+    if (code != serverCode) {
+      alert("Wrong code!");
+      return;
+    }
+
+		var myHeaders = new Headers();
+		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+		myHeaders.append("Content-Type", "application/json");
+
+		var raw = JSON.stringify({
+      "mail": mail
+    });
+
+		var requestOptions = {
+				method: 'POST',
+        body: raw,
+				headers: myHeaders,
+				redirect: 'follow'
+		};
+
+		await fetch(process.env.REACT_APP_API_URL + "sendEmail/setMail", requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      if (result) {
+        alert("Activated!");
+        setCode("");
+        setServerCode("");
+        setMail("");
+        onHandleActiveModalClose();
+      }
+    })
+    .catch(error => {
+        alert(error);
+    })
+  };
+  
 	const onSubmitHandler = async(e) => {
 		e.preventDefault();
 
@@ -116,6 +204,16 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
   const onHandleProfileOnClick = () => { navigate(url); }
   const onHandleNotificationOnClick = () => { setIsHiddenNotification(!isHiddenNotification) }
   const onHandleGoHome = () => {navigate("/")}
+
+  const codeOnChangeHandler = (e) => setCode(e.target.value);
+  const mailOnChangeHandler = (e) => setMail(e.target.value);
+	const onHandleActiveModalClose = () => setActiveModelShow(false);
+  const onHandleActiveModalShow = () => {
+    setActiveModelShow(true);
+    setEnterMailStep(true);
+    setMail("");
+    setCode("");
+  }
  
   const isAdmin = localStorage.getItem("isAdmin");
   return (
@@ -136,6 +234,7 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {brandName}
           </Typography>
+          {(active != 'null')? <div></div> : <Button className="btn btn-success" style={{ backgroundColor: 'blue', color: 'white'}} onClick={onHandleActiveModalShow}> Active Mail </Button> }
           {!isAdmin ? <div>  
             <IconButton
                 size="large"
@@ -217,9 +316,41 @@ export default function TopNavBar({ brandName, onLogoutSuccess, setTrigger }) {
         </Modal.Body>
         <Modal.Footer>
         <div className="text-center w-100">
-                  <button type="submit" className="btn btn-success addClassButton" onClick={onSubmitHandler}> Add Class </button>
-                  <button className="btn btn-success addClassButton" onClick={onHandleModalClose}> Close </button>
-                </div>
+          <button type="submit" className="btn btn-success addClassButton" onClick={onSubmitHandler}> Add Class </button>
+          <button className="btn btn-success addClassButton" onClick={onHandleModalClose}> Close </button>
+        </div>
+        </Modal.Footer>
+    </Modal>
+
+    <Modal show={activeModelShow} onHide={onHandleActiveModalClose}>
+        <Modal.Header closeButton>
+        <Modal.Title>Verify Mail</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+              {enterMailStep? 
+              <div className="addClassInput">
+                  <input type="email" className="form-control" value={mail} placeholder="Email..." onChange={mailOnChangeHandler} />
+              </div>
+              :
+              <div className="addClassInput">
+                  <input type="text" className="form-control" value={code} placeholder="Verify Code..." onChange={codeOnChangeHandler} />
+              </div>
+              }
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          { enterMailStep?
+            <div className="text-center w-100">
+              <button className="btn btn-success addClassButton" onClick={getVerifyCode}> Next </button>
+            </div>
+            : 
+            <div className="text-center w-100">
+              <button type="button" className="btn btn-success addClassButton" onClick={verifyActiveCode}> Verify </button>
+              <button className="btn btn-success addClassButton" onClick={getVerifyCode}> Resend </button>
+              <button className="btn btn-success addClassButton" onClick={backStep}> Back </button>
+          </div>
+          }
         </Modal.Footer>
     </Modal>
     </Box>
